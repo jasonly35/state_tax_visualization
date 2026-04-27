@@ -87,15 +87,19 @@ export function PosterPage({ profile }: Props) {
 // ---------------------------------------------------------------------------
 function Header({ profile }: { profile: Profile }) {
   const { incomeMix } = profile;
+  // Compact format: 240000 → "240k", 1500000 → "1.5m". Used in the title only.
+  const incomeShort = profile.grossIncome >= 1_000_000
+    ? `$${(profile.grossIncome / 1_000_000).toFixed(1).replace(/\.0$/, '')}m`
+    : `$${Math.round(profile.grossIncome / 1000)}k`;
   return (
     <div style={{ padding: '44px 60px 24px 60px', borderBottom: '1px solid #e2e8f0' }}>
-      <h1 style={{ fontSize: 36, fontWeight: 700, color: '#0f172a', lineHeight: 1.2, letterSpacing: '-0.015em', margin: 0 }}>
-        Total state and local tax burden for a {fmtUSD(profile.grossIncome)} married couple
-        with one dependent moving to a new state in 2025
+      <h1 style={{ fontSize: 44, fontWeight: 700, color: '#0f172a', lineHeight: 1.15, letterSpacing: '-0.02em', margin: 0 }}>
+        Total state tax for a couple making {incomeShort}
       </h1>
       <p style={{ fontSize: 14, color: '#94a3b8', marginTop: 18, lineHeight: 1.5 }}>
-        Scenario assumes max 401(k) ($23,500) and family HSA ($8,550), 80th-percentile metro
-        home, top-quintile consumption, $80K vehicle, 24K annual miles. Income mix:{' '}
+        Married filing jointly, one dependent, moving to a new state in 2025. Scenario
+        assumes max 401(k) ($23,500) and family HSA ($8,550), 80th-percentile metro home,
+        top-quintile consumption, $80K vehicle, 24K annual miles. Income mix:{' '}
         {(incomeMix.w2 * 100).toFixed(0)}% W-2 / {(incomeMix.intDiv * 100).toFixed(0)}% interest+div /
         {' '}{(incomeMix.ltcg * 100).toFixed(0)}% long-term cap gains. Each state uses its
         representative city for local taxes (NYC for NY, Philadelphia for PA, etc.).
