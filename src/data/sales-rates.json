@@ -5,7 +5,7 @@
     "schema": "combined is the effective combined state + avg local sales tax rate as a decimal"
   },
   "AL": {"combined": 0.0929}, "AK": {"combined": 0.0181}, "AZ": {"combined": 0.0838}, "AR": {"combined": 0.0945},
-  "CA": {"combined": 0.0885}, "CO": {"combined": 0.0781}, "CT": {"combined": 0.0635}, "DE": {"combined": 0.0000},
+  "CA": {"combined": 0.0885}, "CO": {"combined": 0.0781}, "CT": {"combined": 0.0635}, "DE": {"combined": 0.0000}, "DC": {"combined": 0.0600},
   "FL": {"combined": 0.0700}, "GA": {"combined": 0.0742}, "HI": {"combined": 0.0450}, "ID": {"combined": 0.0603},
   "IL": {"combined": 0.0886}, "IN": {"combined": 0.0700}, "IA": {"combined": 0.0694}, "KS": {"combined": 0.0875},
   "KY": {"combined": 0.0600}, "LA": {"combined": 0.0956}, "ME": {"combined": 0.0550}, "MD": {"combined": 0.0600},

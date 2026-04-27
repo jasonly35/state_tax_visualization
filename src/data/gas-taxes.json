@@ -5,7 +5,7 @@
     "schema": "perGallon is dollars/gallon"
   },
   "AL": {"perGallon": 0.31}, "AK": {"perGallon": 0.09}, "AZ": {"perGallon": 0.18}, "AR": {"perGallon": 0.25},
-  "CA": {"perGallon": 0.78}, "CO": {"perGallon": 0.29}, "CT": {"perGallon": 0.25}, "DE": {"perGallon": 0.23},
+  "CA": {"perGallon": 0.78}, "CO": {"perGallon": 0.29}, "CT": {"perGallon": 0.25}, "DE": {"perGallon": 0.23}, "DC": {"perGallon": 0.34},
   "FL": {"perGallon": 0.39}, "GA": {"perGallon": 0.32}, "HI": {"perGallon": 0.16}, "ID": {"perGallon": 0.33},
   "IL": {"perGallon": 0.66}, "IN": {"perGallon": 0.50}, "IA": {"perGallon": 0.30}, "KS": {"perGallon": 0.24},
   "KY": {"perGallon": 0.28}, "LA": {"perGallon": 0.20}, "ME": {"perGallon": 0.30}, "MD": {"perGallon": 0.47},

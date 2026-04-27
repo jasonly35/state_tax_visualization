@@ -5,7 +5,7 @@
     "schema": "perDriver is annual vehicle miles per licensed driver"
   },
   "AL": {"perDriver": 16500}, "AK": {"perDriver": 10000}, "AZ": {"perDriver": 13500}, "AR": {"perDriver": 17500},
-  "CA": {"perDriver": 12500}, "CO": {"perDriver": 13500}, "CT": {"perDriver": 12000}, "DE": {"perDriver": 13000},
+  "CA": {"perDriver": 12500}, "CO": {"perDriver": 13500}, "CT": {"perDriver": 12000}, "DE": {"perDriver": 13000}, "DC": {"perDriver": 5500},
   "FL": {"perDriver": 14000}, "GA": {"perDriver": 16500}, "HI": {"perDriver": 9500}, "ID": {"perDriver": 14500},
   "IL": {"perDriver": 12500}, "IN": {"perDriver": 16000}, "IA": {"perDriver": 14500}, "KS": {"perDriver": 14500},
   "KY": {"perDriver": 14000}, "LA": {"perDriver": 13500}, "ME": {"perDriver": 13500}, "MD": {"perDriver": 13500},

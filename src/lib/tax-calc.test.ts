@@ -490,7 +490,7 @@ describe('all 50 states load and compute without throwing', () => {
   it('produces a finite total for every state via computeAllBreakdowns', () => {
     const resolver = makeOverlayResolver('state_default');
     const breakdowns = computeAllBreakdowns(DEFAULT_PROFILE, STATE_DATA, resolver);
-    expect(breakdowns.length).toBe(50);
+    expect(breakdowns.length).toBe(51); // 50 states + DC
     for (const b of breakdowns) {
       expect(Number.isFinite(b.total)).toBe(true);
       expect(b.total).toBeGreaterThan(0);

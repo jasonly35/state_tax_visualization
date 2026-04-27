@@ -2,8 +2,11 @@
 
 export type FilingStatus = 'mfj' | 'single' | 'hoh';
 
+// 50 states + DC. DC is a federal district, not a state, but it has its own
+// independent income/property/sales tax regime and is a relevant relocation
+// target for the audience this tool serves. Treated as a top-level jurisdiction.
 export const STATES = [
-  'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA',
+  'AL','AK','AZ','AR','CA','CO','CT','DE','DC','FL','GA',
   'HI','ID','IL','IN','IA','KS','KY','LA','ME','MD',
   'MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ',
   'NM','NY','NC','ND','OH','OK','OR','PA','RI','SC',

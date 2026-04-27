@@ -108,12 +108,13 @@ function Header({ profile }: { profile: Profile }) {
         Total state tax for a couple making {incomeShort}
       </h1>
       <p style={{ fontSize: 14, color: '#94a3b8', marginTop: 18, lineHeight: 1.5 }}>
-        Married filing jointly, one dependent, moving to a new state in 2025. Scenario
-        assumes max 401(k) ($23,500) and family HSA ($8,550), 80th-percentile metro home,
-        top-quintile consumption, $50K vehicle, 24K annual miles. Income mix:{' '}
-        {(incomeMix.w2 * 100).toFixed(0)}% W-2 / {(incomeMix.intDiv * 100).toFixed(0)}% interest+div /
-        {' '}{(incomeMix.ltcg * 100).toFixed(0)}% long-term cap gains. Each state uses its
-        representative city for local taxes (NYC for NY, Philadelphia for PA, etc.).
+        Married filing jointly, one dependent, moving in 2025 — all 50 US states + DC.
+        Scenario assumes max 401(k) ($23,500) and family HSA ($8,550), 80th-percentile
+        metro home, top-quintile consumption, $50K vehicle, 24K annual miles. Income
+        mix: {(incomeMix.w2 * 100).toFixed(0)}% W-2 / {(incomeMix.intDiv * 100).toFixed(0)}%
+        {' '}interest+div / {(incomeMix.ltcg * 100).toFixed(0)}% long-term cap gains. Each
+        jurisdiction uses its representative city for local taxes (NYC for NY,
+        Philadelphia for PA, etc.).
       </p>
     </div>
   );
@@ -149,6 +150,7 @@ function ChoroplethPanel({
     [],
   );
   const path = useMemo(() => geoPath(projection), [projection]);
+  const dcCoords = useMemo(() => projection([-77.0369, 38.9072]), [projection]);
 
   const { scale, min, max, median } = useMemo(() => {
     const v = breakdowns.map((b) => b.total);
@@ -188,6 +190,46 @@ function ChoroplethPanel({
               />
             );
           })}
+
+          {/* DC marker — square + leader line + label, since DC isn't in
+              us-atlas. Positioned at its actual lat/lon. */}
+          {dcCoords && (() => {
+            const [cx, cy] = dcCoords;
+            const b = byCode.get('DC');
+            const fill = b ? scale(b.total) : '#f1f5f9';
+            const offX = 36;
+            const offY = 22;
+            const mx = cx + offX;
+            const my = cy + offY;
+            const size = 14;
+            return (
+              <g>
+                <line x1={cx} y1={cy} x2={mx} y2={my} stroke="#475569" strokeWidth={0.7} />
+                <circle cx={cx} cy={cy} r={2} fill="#1e293b" />
+                <rect
+                  x={mx - size / 2}
+                  y={my - size / 2}
+                  width={size}
+                  height={size}
+                  fill={fill}
+                  stroke="#ffffff"
+                  strokeWidth={0.8}
+                />
+                <text
+                  x={mx + size / 2 + 4}
+                  y={my + 4}
+                  style={{
+                    fontFamily: 'ui-sans-serif, system-ui, sans-serif',
+                    fontSize: 11,
+                    fontWeight: 600,
+                    fill: '#0f172a',
+                  }}
+                >
+                  DC
+                </text>
+              </g>
+            );
+          })()}
         </svg>
 
         {/* Legend — separate svg below the map so it never overlaps Hawaii / AK */}

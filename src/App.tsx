@@ -52,7 +52,7 @@ export default function App() {
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-3 sm:flex-row sm:items-baseline sm:justify-between sm:px-6">
           <h1 className="text-sm font-semibold sm:text-base">
-            State Taxes for Individuals
+            State Taxes for Individuals <span className="font-normal text-slate-500">— 50 states + DC</span>
           </h1>
           <nav className="flex flex-wrap gap-x-4 gap-y-1 text-xs">
             <button onClick={() => setPage('audit')} className="text-sky-700 hover:underline">per-state data</button>

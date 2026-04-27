@@ -31,11 +31,12 @@ export function MethodologyPage({ onBack }: Props) {
 
         <Section title="What this tool computes">
           <P>
-            For each of the 50 states, given your household profile, the tool computes
-            seven tax components and sums them. The default scenario is a $240K MFJ
-            couple with one dependent, maxing 401(k) and HSA, owning an 80th-percentile
-            home, with top-quintile consumption, and one representative residence per
-            state (NYC for NY, Philadelphia for PA, Detroit for MI, etc.).
+            For each of the 50 states + Washington DC (treated as a 51st jurisdiction
+            since it has its own independent tax regime), given your household profile,
+            the tool computes seven tax components and sums them. The default scenario
+            is a $240K MFJ couple with one dependent, maxing 401(k) and HSA, owning an
+            80th-percentile home, with top-quintile consumption, and one representative
+            residence per state (NYC for NY, Philadelphia for PA, Detroit for MI, etc.).
           </P>
           <UL>
             <LI>

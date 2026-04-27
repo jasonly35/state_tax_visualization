@@ -72,6 +72,12 @@ export function Choropleth({ breakdowns, selected, onSelect }: Props) {
   );
   const path = useMemo(() => geoPath(projection), [projection]);
 
+  // DC is too geographically tiny to render as a polygon at this scale (us-atlas
+  // doesn't include it as a separate feature), so we render a small square at
+  // its projected coordinates with a short leader line + "DC" label. Same hover
+  // / click affordance as other states.
+  const dcCoords = useMemo(() => projection([-77.0369, 38.9072]), [projection]);
+
   const activeCode = hovered ?? selected;
   const activeBreakdown = activeCode ? byCode.get(activeCode) ?? null : null;
 
@@ -154,6 +160,70 @@ export function Choropleth({ breakdowns, selected, onSelect }: Props) {
             });
           })()}
         </g>
+
+        {/* DC marker — square + leader line + label, since DC isn't in us-atlas
+            as a polygon. Positioned at DC's actual lat/lon via the same Albers
+            projection so it stays geographically anchored if scale changes. */}
+        {dcCoords && (() => {
+          const [cx, cy] = dcCoords;
+          const b = byCode.get('DC');
+          const fill = b ? scale(b.total) : '#f1f5f9';
+          const isSel = selected === 'DC';
+          const isHover = hovered === 'DC';
+          // Marker offset to the southeast so it doesn't sit on top of MD/VA.
+          const offsetX = 30;
+          const offsetY = 18;
+          const mx = cx + offsetX;
+          const my = cy + offsetY;
+          const size = 12;
+          return (
+            <g>
+              {/* Leader from DC's geographic position to the marker */}
+              <line
+                x1={cx}
+                y1={cy}
+                x2={mx}
+                y2={my}
+                stroke="#475569"
+                strokeWidth={0.6}
+                pointerEvents="none"
+              />
+              {/* Anchor dot at the geographic location */}
+              <circle cx={cx} cy={cy} r={1.5} fill="#1e293b" pointerEvents="none" />
+              {/* The clickable marker square */}
+              <rect
+                x={mx - size / 2}
+                y={my - size / 2}
+                width={size}
+                height={size}
+                fill={fill}
+                stroke={isSel ? '#0f172a' : isHover ? '#1e293b' : '#ffffff'}
+                strokeWidth={isSel ? 2 : isHover ? 1.5 : 0.8}
+                filter={isSel ? 'url(#state-shadow)' : undefined}
+                onMouseEnter={() => setHovered('DC')}
+                onMouseLeave={() => setHovered(null)}
+                onClick={() => onSelect(isSel ? null : 'DC')}
+                className="cursor-pointer transition-colors"
+              >
+                <title>District of Columbia</title>
+              </rect>
+              {/* Small "DC" label next to the marker */}
+              <text
+                x={mx + size / 2 + 4}
+                y={my + 3}
+                style={{
+                  fontFamily: 'ui-sans-serif, system-ui, sans-serif',
+                  fontSize: 10,
+                  fontWeight: 600,
+                  fill: '#0f172a',
+                }}
+                pointerEvents="none"
+              >
+                DC
+              </text>
+            </g>
+          );
+        })()}
 
         {/* Legend — continuous gradient with min, median tick, max */}
         <g transform={`translate(0, ${HEIGHT})`}>

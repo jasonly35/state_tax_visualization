@@ -122,6 +122,29 @@
     "personalExemption": {"mfj": 220, "single": 110, "hoh": 110},
     "dependentExemption": 110
   },
+  "DC": {
+    "_note": "DC is a federal district, not a state, but has its own independent income tax. DC OTR 2024 brackets used here.",
+    "brackets": {
+      "mfj": [
+        {"min": 0, "rate": 0.04}, {"min": 10000, "rate": 0.06}, {"min": 40000, "rate": 0.065},
+        {"min": 60000, "rate": 0.085}, {"min": 250000, "rate": 0.0925}, {"min": 500000, "rate": 0.0975},
+        {"min": 1000000, "rate": 0.1075}
+      ],
+      "single": [
+        {"min": 0, "rate": 0.04}, {"min": 10000, "rate": 0.06}, {"min": 40000, "rate": 0.065},
+        {"min": 60000, "rate": 0.085}, {"min": 250000, "rate": 0.0925}, {"min": 500000, "rate": 0.0975},
+        {"min": 1000000, "rate": 0.1075}
+      ],
+      "hoh": [
+        {"min": 0, "rate": 0.04}, {"min": 10000, "rate": 0.06}, {"min": 40000, "rate": 0.065},
+        {"min": 60000, "rate": 0.085}, {"min": 250000, "rate": 0.0925}, {"min": 500000, "rate": 0.0975},
+        {"min": 1000000, "rate": 0.1075}
+      ]
+    },
+    "stdDeduction": {"mfj": 30000, "single": 15000, "hoh": 22500},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  },
   "FL": {
     "brackets": {"mfj": [], "single": [], "hoh": []},
     "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
