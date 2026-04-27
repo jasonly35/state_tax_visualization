@@ -1,5 +1,75 @@
+import { useEffect, useState } from 'react';
 import type { Profile, IncomeMix } from '../lib/profile';
 import { clampMix } from '../lib/profile';
+
+// Format a number as compact shorthand: 240000 → "240k", 1500000 → "1.5m".
+function formatK(n: number): string {
+  if (!Number.isFinite(n) || n === 0) return '0';
+  if (Math.abs(n) >= 1_000_000) {
+    const v = n / 1_000_000;
+    return `${v % 1 === 0 ? v.toFixed(0) : v.toFixed(2).replace(/\.?0+$/, '')}m`;
+  }
+  if (Math.abs(n) >= 1_000) {
+    const v = n / 1_000;
+    return `${v % 1 === 0 ? v.toFixed(0) : v.toFixed(1).replace(/\.0$/, '')}k`;
+  }
+  return String(Math.round(n));
+}
+
+// Parse "240k", "1.5m", "240,000", "240000" → number. Returns null if unparseable.
+function parseK(s: string): number | null {
+  const cleaned = s.trim().replace(/[, _$]/g, '').toLowerCase();
+  if (cleaned === '') return null;
+  const m = cleaned.match(/^(-?[\d.]+)\s*([km])?$/);
+  if (!m) return null;
+  const n = parseFloat(m[1]);
+  if (!Number.isFinite(n)) return null;
+  const mult = m[2] === 'm' ? 1_000_000 : m[2] === 'k' ? 1_000 : 1;
+  return Math.round(n * mult);
+}
+
+// Text input that accepts compact-shorthand numbers (e.g. "240k", "1.5m") and
+// emits a numeric value. Reformats on blur / Enter to the canonical form.
+interface KInputProps {
+  value: number;
+  min?: number;
+  max?: number;
+  onChange: (n: number) => void;
+}
+
+function KInput({ value, min, max, onChange }: KInputProps) {
+  const [text, setText] = useState(formatK(value));
+  // Re-sync when the upstream value changes (e.g. on reset).
+  useEffect(() => setText(formatK(value)), [value]);
+
+  const commit = () => {
+    const parsed = parseK(text);
+    if (parsed === null) {
+      setText(formatK(value));
+      return;
+    }
+    let clamped = parsed;
+    if (typeof min === 'number') clamped = Math.max(min, clamped);
+    if (typeof max === 'number') clamped = Math.min(max, clamped);
+    if (clamped !== value) onChange(clamped);
+    setText(formatK(clamped));
+  };
+
+  return (
+    <input
+      type="text"
+      inputMode="decimal"
+      value={text}
+      onChange={(e) => setText(e.target.value)}
+      onBlur={commit}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur();
+      }}
+      className="w-full rounded border border-slate-300 px-2 py-1 font-mono"
+      placeholder="e.g. 240k"
+    />
+  );
+}
 
 interface Props {
   profile: Profile;
@@ -20,15 +90,12 @@ export function ProfilePanel({ profile, onChange, onReset }: Props) {
   return (
     <div className="space-y-5 text-sm">
       <Section title="Household income">
-        <Field label="Gross income">
-          <input
-            type="number"
+        <Field label="Gross income (e.g. 240k, 1.5m)">
+          <KInput
+            value={profile.grossIncome}
             min={50_000}
             max={5_000_000}
-            step={5_000}
-            value={profile.grossIncome}
-            onChange={(e) => onChange({ ...profile, grossIncome: Number(e.target.value) })}
-            className="w-full rounded border border-slate-300 px-2 py-1"
+            onChange={(n) => onChange({ ...profile, grossIncome: n })}
           />
         </Field>
         <Field label="Filing status">
@@ -115,26 +182,20 @@ export function ProfilePanel({ profile, onChange, onReset }: Props) {
       </Section>
 
       <Section title="Vehicles">
-        <Field label="Combined household vehicle value (USD)">
-          <input
-            type="number"
+        <Field label="Combined household vehicle value (e.g. 80k)">
+          <KInput
+            value={profile.vehicleValue}
             min={0}
             max={500_000}
-            step={5_000}
-            value={profile.vehicleValue}
-            onChange={(e) => onChange({ ...profile, vehicleValue: Number(e.target.value) })}
-            className="w-full rounded border border-slate-300 px-2 py-1"
+            onChange={(n) => onChange({ ...profile, vehicleValue: n })}
           />
         </Field>
-        <Field label="Annual household miles">
-          <input
-            type="number"
+        <Field label="Annual household miles (e.g. 24k)">
+          <KInput
+            value={profile.annualMiles}
             min={0}
             max={80_000}
-            step={1_000}
-            value={profile.annualMiles}
-            onChange={(e) => onChange({ ...profile, annualMiles: Number(e.target.value) })}
-            className="w-full rounded border border-slate-300 px-2 py-1"
+            onChange={(n) => onChange({ ...profile, annualMiles: n })}
           />
         </Field>
       </Section>
