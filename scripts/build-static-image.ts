@@ -56,7 +56,7 @@ async function main() {
     // browser context (DOM types), but the `tsconfig.node.json` only knows Node
     // types — using `Function` keeps the script's compile clean.
     const checkPoster: () => boolean = new Function(
-      'return document.body.innerText.includes("Where your tax dollars actually go")',
+      'return document.body.innerText.includes("Where the dollars actually go")',
     ) as () => boolean;
     await page.waitForFunction(checkPoster, { timeout: 10_000 });
 

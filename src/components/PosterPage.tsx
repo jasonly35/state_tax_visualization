@@ -88,15 +88,12 @@ export function PosterPage({ profile }: Props) {
 function Header({ profile }: { profile: Profile }) {
   const { incomeMix } = profile;
   return (
-    <div style={{ padding: '40px 60px 24px 60px', borderBottom: '1px solid #e2e8f0' }}>
-      <h1 style={{ fontSize: 44, fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.02em', margin: 0 }}>
-        Where your tax dollars actually go — by state
-      </h1>
-      <p style={{ fontSize: 22, color: '#475569', marginTop: 14, lineHeight: 1.4, fontWeight: 400 }}>
+    <div style={{ padding: '44px 60px 24px 60px', borderBottom: '1px solid #e2e8f0' }}>
+      <h1 style={{ fontSize: 36, fontWeight: 700, color: '#0f172a', lineHeight: 1.2, letterSpacing: '-0.015em', margin: 0 }}>
         Total state and local tax burden for a {fmtUSD(profile.grossIncome)} married couple
         with one dependent moving to a new state in 2025
-      </p>
-      <p style={{ fontSize: 14, color: '#94a3b8', marginTop: 16, lineHeight: 1.5 }}>
+      </h1>
+      <p style={{ fontSize: 14, color: '#94a3b8', marginTop: 18, lineHeight: 1.5 }}>
         Scenario assumes max 401(k) ($23,500) and family HSA ($8,550), 80th-percentile metro
         home, top-quintile consumption, $80K vehicle, 24K annual miles. Income mix:{' '}
         {(incomeMix.w2 * 100).toFixed(0)}% W-2 / {(incomeMix.intDiv * 100).toFixed(0)}% interest+div /
@@ -118,7 +115,8 @@ function ChoroplethPanel({
   sortedDesc: Breakdown[];
 }) {
   const W = 1080;
-  const H = 700;
+  const H = 620;
+  const LEGEND_H = 70;
 
   const byCode = useMemo(() => {
     const m = new Map<StateCode, Breakdown>();
@@ -132,7 +130,7 @@ function ChoroplethPanel({
   }, []);
 
   const projection = useMemo(
-    () => geoAlbersUsa().scale(1400).translate([W / 2, H / 2 - 20]),
+    () => geoAlbersUsa().scale(1300).translate([W / 2, H / 2]),
     [],
   );
   const path = useMemo(() => geoPath(projection), [projection]);
@@ -158,17 +156,8 @@ function ChoroplethPanel({
   return (
     <div style={{ padding: '32px 60px 24px 60px', display: 'grid', gridTemplateColumns: '1fr 360px', gap: 32 }}>
       <div>
-        <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ height: 'auto' }}>
-          <defs>
-            <linearGradient id="poster-legend" x1="0" x2="1" y1="0" y2="0">
-              {Array.from({ length: 21 }, (_, i) => {
-                const t = i / 20;
-                const value = (min * 0.7) + t * ((max * 1.05) - (min * 0.7));
-                return <stop key={i} offset={`${t * 100}%`} stopColor={scale(value)} />;
-              })}
-            </linearGradient>
-          </defs>
-
+        {/* Map svg */}
+        <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ height: 'auto', display: 'block' }}>
           {(featureCollection.features as any[]).map((f) => {
             const code = FIPS_TO_CODE[String(f.id).padStart(2, '0')];
             if (!code) return null;
@@ -184,9 +173,24 @@ function ChoroplethPanel({
               />
             );
           })}
+        </svg>
 
-          {/* Legend */}
-          <g transform={`translate(60, ${H - 50})`}>
+        {/* Legend — separate svg below the map so it never overlaps Hawaii / AK */}
+        <svg
+          viewBox={`0 0 ${W} ${LEGEND_H}`}
+          width="100%"
+          style={{ height: 'auto', display: 'block', marginTop: 24 }}
+        >
+          <defs>
+            <linearGradient id="poster-legend" x1="0" x2="1" y1="0" y2="0">
+              {Array.from({ length: 21 }, (_, i) => {
+                const t = i / 20;
+                const value = (min * 0.7) + t * ((max * 1.05) - (min * 0.7));
+                return <stop key={i} offset={`${t * 100}%`} stopColor={scale(value)} />;
+              })}
+            </linearGradient>
+          </defs>
+          <g transform={`translate(60, 22)`}>
             <text x={0} y={-8} style={{ fontSize: 12, fontWeight: 600, fill: '#475569' }}>
               Total state &amp; local tax
             </text>
@@ -233,21 +237,40 @@ function Callout({
   rows: Breakdown[];
   accent: string;
 }) {
+  const headerCell: React.CSSProperties = {
+    fontSize: 10,
+    fontWeight: 600,
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
+    color: '#94a3b8',
+    paddingTop: 8,
+    paddingBottom: 6,
+    borderBottom: '1px solid #e2e8f0',
+  };
+
   return (
     <div style={{ border: '1px solid #e2e8f0', borderRadius: 8, padding: 16 }}>
       <div style={{ fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', color: accent }}>
         {title}
       </div>
       <table style={{ width: '100%', marginTop: 8, fontSize: 14, borderCollapse: 'collapse' }}>
+        <thead>
+          <tr>
+            <th style={{ ...headerCell, textAlign: 'left', width: 24 }}></th>
+            <th style={{ ...headerCell, textAlign: 'left' }}>State</th>
+            <th style={{ ...headerCell, textAlign: 'right' }}>Total tax</th>
+            <th style={{ ...headerCell, textAlign: 'right', paddingLeft: 8 }}>% of gross</th>
+          </tr>
+        </thead>
         <tbody>
           {rows.map((r, i) => (
             <tr key={r.state}>
-              <td style={{ color: '#94a3b8', paddingRight: 8, paddingTop: 4, paddingBottom: 4, width: 24 }}>{i + 1}</td>
-              <td style={{ paddingTop: 4, paddingBottom: 4, fontWeight: 500 }}>{STATE_BY_CODE[r.state].name}</td>
-              <td style={{ textAlign: 'right', paddingTop: 4, paddingBottom: 4, fontVariantNumeric: 'tabular-nums', fontWeight: 600 }}>
+              <td style={{ color: '#94a3b8', paddingRight: 8, paddingTop: 5, paddingBottom: 5, width: 24 }}>{i + 1}</td>
+              <td style={{ paddingTop: 5, paddingBottom: 5, fontWeight: 500 }}>{STATE_BY_CODE[r.state].name}</td>
+              <td style={{ textAlign: 'right', paddingTop: 5, paddingBottom: 5, fontVariantNumeric: 'tabular-nums', fontWeight: 600 }}>
                 {fmtUSD(r.total)}
               </td>
-              <td style={{ textAlign: 'right', paddingLeft: 8, paddingTop: 4, paddingBottom: 4, fontVariantNumeric: 'tabular-nums', color: '#64748b', fontSize: 12 }}>
+              <td style={{ textAlign: 'right', paddingLeft: 8, paddingTop: 5, paddingBottom: 5, fontVariantNumeric: 'tabular-nums', color: '#64748b', fontSize: 12 }}>
                 {fmtPctShort(r.effectiveRate)}
               </td>
             </tr>
