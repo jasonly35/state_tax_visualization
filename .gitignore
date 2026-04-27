@@ -7,3 +7,6 @@ dist/
 .env.*
 !.env.example
 coverage/
+
+# Generated poster image (run `npm run poster` to regenerate)
+poster.png

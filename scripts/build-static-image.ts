@@ -1,38 +1,87 @@
-// Reddit poster builder. Loads the live app at a canonical URL, hides the
-// editor pane, and screenshots a 1600×2400 PNG at 2× DPI.
+// Render the static r/dataisbeautiful poster.
 //
-// Run:  npm run poster
-// Requires:  the dev server running on :5173, OR a built `dist/` served via
-//            `npm run preview`.
+// Usage:
+//   1. Build + serve:  npm run build && npm run preview &
+//   2. Run script:     npm run poster
+//   3. Output:         poster.png in repo root (1600 × 2400 @ 2× DPI = 3200 × 4800)
 //
-// Stub: this script is wired but Puppeteer is not yet a dependency. Add
-// puppeteer to devDependencies when you're ready to run it.
+// The script loads the live preview at /?poster=1, which switches App into the
+// `<PosterPage>` static layout (no controls, no tooltip, no header chrome).
+// We wait for fonts and SVG layout to settle before screenshotting.
 
-const TARGET_URL =
-  process.env.POSTER_URL ?? 'http://localhost:4173/state_tax_visualization/?p=v1|aaaa|...';
+import puppeteer from 'puppeteer';
+import { promises as fs } from 'node:fs';
+import { resolve } from 'node:path';
+
+const POSTER_W = 1600;
+const POSTER_H = 2400;
+const SCALE = 2;
+const PREVIEW_HOST = process.env.POSTER_HOST ?? 'http://localhost:4173';
+const POSTER_PATH = '/state_tax_visualization/?poster=1';
 
 async function main() {
-  // Resolved at runtime so TS doesn't require @types/puppeteer at typecheck time.
-  const moduleName = 'puppeteer';
-  const puppeteer = await import(moduleName).catch(() => null) as
-    | { launch: (opts?: unknown) => Promise<{ newPage: () => Promise<unknown>; close: () => Promise<void> }> }
-    | null;
-  if (!puppeteer) {
-    console.error(
-      'puppeteer is not installed. Add it as a devDependency before running this script:\n' +
-      '  npm i -D puppeteer',
-    );
-    process.exit(1);
-  }
+  const url = `${PREVIEW_HOST}${POSTER_PATH}`;
+  console.log(`Loading ${url}`);
 
-  const browser: any = await puppeteer.launch({ defaultViewport: { width: 1600, height: 2400, deviceScaleFactor: 2 } });
-  const page = await browser.newPage();
-  await page.goto(TARGET_URL, { waitUntil: 'networkidle0' });
-  // Hide the editor pane on the printed output.
-  await page.addStyleTag({ content: 'aside, header button, footer { display: none !important; }' });
-  await page.screenshot({ path: 'poster.png', fullPage: true });
-  await browser.close();
-  console.log('Wrote poster.png');
+  const browser = await puppeteer.launch({
+    headless: true,
+    defaultViewport: {
+      width: POSTER_W,
+      height: POSTER_H,
+      deviceScaleFactor: SCALE,
+    },
+  });
+
+  try {
+    const page = await browser.newPage();
+
+    // Forward console errors so we see issues in the page.
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') {
+        console.error('[page error]', msg.text());
+      }
+    });
+    page.on('pageerror', (err: unknown) => {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error('[page exception]', msg);
+    });
+
+    const resp = await page.goto(url, { waitUntil: 'networkidle0', timeout: 30_000 });
+    if (!resp || !resp.ok()) {
+      throw new Error(`Failed to load ${url} — ${resp?.status() ?? 'no response'}`);
+    }
+
+    // Make sure the poster root is in the DOM (PosterPage rendered, not main app).
+    // The functions passed to page.waitForFunction / page.evaluate run inside the
+    // browser context (DOM types), but the `tsconfig.node.json` only knows Node
+    // types — using `Function` keeps the script's compile clean.
+    const checkPoster: () => boolean = new Function(
+      'return document.body.innerText.includes("Where your tax dollars actually go")',
+    ) as () => boolean;
+    await page.waitForFunction(checkPoster, { timeout: 10_000 });
+
+    // Wait for web fonts to settle (avoids glyph reflow during screenshot).
+    const waitFonts: () => Promise<void> = new Function(
+      `return (async () => { if (document.fonts && document.fonts.ready) await document.fonts.ready; })()`,
+    ) as () => Promise<void>;
+    await page.evaluate(waitFonts);
+
+    // Tiny additional settle to let any d3 paths finish.
+    await new Promise((r) => setTimeout(r, 250));
+
+    const out = resolve(process.cwd(), 'poster.png');
+    const buf = await page.screenshot({
+      type: 'png',
+      clip: { x: 0, y: 0, width: POSTER_W, height: POSTER_H },
+    });
+    await fs.writeFile(out, buf);
+    const stat = await fs.stat(out);
+    console.log(
+      `Wrote ${out}  (${(stat.size / 1024).toFixed(1)} KB,  ${POSTER_W * SCALE}×${POSTER_H * SCALE} px)`,
+    );
+  } finally {
+    await browser.close();
+  }
 }
 
 main().catch((e) => {

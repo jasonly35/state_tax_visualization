@@ -9,8 +9,17 @@ import { Choropleth } from './components/Choropleth';
 import { AssumptionsDrawer } from './components/AssumptionsDrawer';
 import { MethodologyPage } from './components/MethodologyPage';
 import { StateAuditPage } from './components/StateAuditPage';
+import { PosterPage } from './components/PosterPage';
 
 type Page = 'main' | 'methodology' | 'audit';
+
+// Detect ?poster=1 (or ?poster) in the URL on initial render. Used by the
+// Puppeteer screenshot pipeline to render a print-quality static layout.
+const isPosterMode = (() => {
+  if (typeof window === 'undefined') return false;
+  const params = new URLSearchParams(window.location.search);
+  return params.has('poster');
+})();
 
 export default function App() {
   const { profile, setProfile, reset } = useProfileUrl();
@@ -28,6 +37,9 @@ export default function App() {
     : null;
 
 
+  if (isPosterMode) {
+    return <PosterPage profile={profile} />;
+  }
   if (page === 'methodology') {
     return <MethodologyPage onBack={() => setPage('main')} />;
   }
