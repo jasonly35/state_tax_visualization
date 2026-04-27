@@ -1,0 +1,20 @@
+{
+  "_meta": {
+    "asOf": "2025-01",
+    "source": "API state motor fuel tax report Q1 2025 — combined state excise + other state taxes/fees per gallon for gasoline. Federal 18.4¢/gal not included.",
+    "schema": "perGallon is dollars/gallon"
+  },
+  "AL": {"perGallon": 0.31}, "AK": {"perGallon": 0.09}, "AZ": {"perGallon": 0.18}, "AR": {"perGallon": 0.25},
+  "CA": {"perGallon": 0.78}, "CO": {"perGallon": 0.29}, "CT": {"perGallon": 0.25}, "DE": {"perGallon": 0.23},
+  "FL": {"perGallon": 0.39}, "GA": {"perGallon": 0.32}, "HI": {"perGallon": 0.16}, "ID": {"perGallon": 0.33},
+  "IL": {"perGallon": 0.66}, "IN": {"perGallon": 0.50}, "IA": {"perGallon": 0.30}, "KS": {"perGallon": 0.24},
+  "KY": {"perGallon": 0.28}, "LA": {"perGallon": 0.20}, "ME": {"perGallon": 0.30}, "MD": {"perGallon": 0.47},
+  "MA": {"perGallon": 0.26}, "MI": {"perGallon": 0.31}, "MN": {"perGallon": 0.32}, "MS": {"perGallon": 0.18},
+  "MO": {"perGallon": 0.25}, "MT": {"perGallon": 0.33}, "NE": {"perGallon": 0.30}, "NV": {"perGallon": 0.34},
+  "NH": {"perGallon": 0.22}, "NJ": {"perGallon": 0.42}, "NM": {"perGallon": 0.18}, "NY": {"perGallon": 0.49},
+  "NC": {"perGallon": 0.40}, "ND": {"perGallon": 0.23}, "OH": {"perGallon": 0.39}, "OK": {"perGallon": 0.20},
+  "OR": {"perGallon": 0.40}, "PA": {"perGallon": 0.59}, "RI": {"perGallon": 0.37}, "SC": {"perGallon": 0.28},
+  "SD": {"perGallon": 0.30}, "TN": {"perGallon": 0.27}, "TX": {"perGallon": 0.20}, "UT": {"perGallon": 0.36},
+  "VT": {"perGallon": 0.32}, "VA": {"perGallon": 0.30}, "WA": {"perGallon": 0.49}, "WV": {"perGallon": 0.36},
+  "WI": {"perGallon": 0.33}, "WY": {"perGallon": 0.24}
+}

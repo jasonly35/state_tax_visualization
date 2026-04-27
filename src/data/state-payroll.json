@@ -1,0 +1,59 @@
+{
+  "_meta": {
+    "asOf": "2025",
+    "source": "State labor department / DOR worker contribution rate publications. SS wage base 2025 = $176,100.",
+    "schema": "components is a list of {rate, cap, name}; cap=null means no wage cap. Rate is decimal applied to W-2 wages."
+  },
+  "CA": {
+    "components": [
+      {"rate": 0.011, "cap": null, "name": "SDI (no wage cap as of 2024)"}
+    ]
+  },
+  "WA": {
+    "components": [
+      {"rate": 0.0074, "cap": 176100, "name": "PFML worker share"},
+      {"rate": 0.0058, "cap": null, "name": "WA Cares Fund (LTSS)"}
+    ]
+  },
+  "NY": {
+    "components": [
+      {"rate": 0.00388, "cap": 89343, "name": "Paid Family Leave"},
+      {"rate": 0.0005, "cap": null, "name": "SDI ($0.60/wk approx)"}
+    ]
+  },
+  "NJ": {
+    "components": [
+      {"rate": 0.0033, "cap": 165400, "name": "Family Leave Insurance worker share"}
+    ]
+  },
+  "OR": {
+    "components": [
+      {"rate": 0.006, "cap": 176100, "name": "Paid Leave Oregon worker share"}
+    ]
+  },
+  "CO": {
+    "components": [
+      {"rate": 0.0045, "cap": 176100, "name": "FAMLI worker share"}
+    ]
+  },
+  "MA": {
+    "components": [
+      {"rate": 0.0036, "cap": 176100, "name": "PFML worker share"}
+    ]
+  },
+  "CT": {
+    "components": [
+      {"rate": 0.005, "cap": 176100, "name": "CT Paid Leave"}
+    ]
+  },
+  "RI": {
+    "components": [
+      {"rate": 0.013, "cap": 89200, "name": "TDI / TCI"}
+    ]
+  },
+  "HI": {
+    "components": [
+      {"rate": 0.005, "cap": 71820, "name": "TDI worker share (cap approx)"}
+    ]
+  }
+}

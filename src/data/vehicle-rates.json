@@ -1,0 +1,21 @@
+{
+  "_meta": {
+    "asOf": "2024",
+    "source": "State personal property / motor vehicle tax statutes. Rates are state-weighted averages where county-level variation exists. Default vehicle value $80,000 (two cars).",
+    "schema": "rate is effective annual ad-valorem tax on motor vehicle market value, decimal"
+  },
+  "VA": {"rate": 0.0413, "notes": "Personal property tax rate weighted across counties; Arlington 5.0%, Fairfax 4.57%, etc."},
+  "CT": {"rate": 0.030,  "notes": "Town-level motor vehicle property tax; statewide average."},
+  "MS": {"rate": 0.025},
+  "ME": {"rate": 0.024,  "notes": "Excise tax declines with vehicle age; first-year rate."},
+  "WV": {"rate": 0.024},
+  "MO": {"rate": 0.015},
+  "RI": {"rate": 0.015,  "notes": "Has been phased down; historically applied."},
+  "AL": {"rate": 0.010,  "notes": "Effective rate on market value; assessed at 15% × millage."},
+  "AR": {"rate": 0.010},
+  "KY": {"rate": 0.0085},
+  "NC": {"rate": 0.0080},
+  "SC": {"rate": 0.0050,  "notes": "Assessed at 6% × millage; effective rate approx."},
+  "OK": {"rate": 0.0035},
+  "AK": {"rate": 0.0010,  "notes": "Registration value-based component, very small."}
+}

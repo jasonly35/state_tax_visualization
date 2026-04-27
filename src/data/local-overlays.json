@@ -1,0 +1,20 @@
+{
+  "_meta": {
+    "asOf": "2025",
+    "source": "City finance department publications. Each entry maps a city key to the parent state and a flat overlay rate.",
+    "schema": "rate applied to ordinary income (W-2 + interest/dividends) after 401(k) reduction unless otherwise noted"
+  },
+  "nyc":            {"state": "NY", "rateOnOrdinary": 0.0388, "appliesToLtcg": true,  "notes": "NYC personal income tax peaks at 3.876% on income above ~$50K MFJ; modeled as flat. Includes LTCG."},
+  "yonkers":        {"state": "NY", "rateOnOrdinary": 0.0165, "appliesToLtcg": true,  "notes": "Yonkers resident surcharge is 16.75% of NY state tax — modeled here as approximate flat 1.65% of state-AGI for simplicity."},
+  "detroit":        {"state": "MI", "rateOnOrdinary": 0.024,  "appliesToLtcg": false, "notes": "Detroit resident wage tax 2.4%."},
+  "philadelphia":   {"state": "PA", "rateOnOrdinary": 0.0375, "appliesToLtcg": false, "notes": "Philadelphia resident wage tax ~3.75% (2025)."},
+  "pittsburgh":     {"state": "PA", "rateOnOrdinary": 0.030,  "appliesToLtcg": false, "notes": "Pittsburgh resident EIT 3.0% combined city + school district."},
+  "cleveland":      {"state": "OH", "rateOnOrdinary": 0.025,  "appliesToLtcg": false, "notes": "Cleveland city income tax 2.5%."},
+  "columbus":       {"state": "OH", "rateOnOrdinary": 0.025,  "appliesToLtcg": false, "notes": "Columbus city income tax 2.5%."},
+  "cincinnati":     {"state": "OH", "rateOnOrdinary": 0.018,  "appliesToLtcg": false, "notes": "Cincinnati earnings tax 1.8% (2025)."},
+  "portland_or":    {"state": "OR", "rateOnOrdinary": 0.024,  "appliesToLtcg": true,  "notes": "Multnomah County PFA 1.5% over $200K MFJ + Metro SHS 1.0% over $200K MFJ; modeled as flat 2.4%."},
+  "birmingham_al":  {"state": "AL", "rateOnOrdinary": 0.010,  "appliesToLtcg": false, "notes": "Birmingham occupational tax 1.0% on wages."},
+  "louisville_ky":  {"state": "KY", "rateOnOrdinary": 0.0145, "appliesToLtcg": false, "notes": "Louisville Metro occupational license tax 1.45%."},
+  "kansas_city_mo": {"state": "MO", "rateOnOrdinary": 0.010,  "appliesToLtcg": false, "notes": "Kansas City earnings tax 1.0% on wages."},
+  "wilmington_de":  {"state": "DE", "rateOnOrdinary": 0.0125, "appliesToLtcg": false, "notes": "Wilmington wage tax 1.25%."}
+}

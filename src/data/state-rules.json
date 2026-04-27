@@ -1,0 +1,131 @@
+{
+  "_meta": {
+    "asOf": "2025",
+    "source": "State DOR conformity guidance + Tax Foundation conformity matrix. SEEDED — confirm each non-default rule before publishing.",
+    "schema": "default rule: conforms to federal 401(k)/HSA, taxes I&D and LTCG as ordinary, zero exclusion. Only deviations are explicit."
+  },
+  "_default": {
+    "conforms401kPretax": true,
+    "conformsHSA": true,
+    "ltcgAsOrdinary": true,
+    "ltcgExclusion": 0,
+    "intDivAsOrdinary": true,
+    "defaultCountyRate": 0
+  },
+  "MD": {"conforms401kPretax": true, "conformsHSA": true, "ltcgAsOrdinary": true, "ltcgExclusion": 0, "intDivAsOrdinary": true,
+    "defaultCountyRate": 0.0320,
+    "notes": ["MD county tax applies to every resident at 2.25%-3.20%; tool defaults to Montgomery County (3.20%, the top of the range and applicable in the most populous counties)."]},
+  "IN": {"conforms401kPretax": true, "conformsHSA": true, "ltcgAsOrdinary": true, "ltcgExclusion": 0, "intDivAsOrdinary": true,
+    "defaultCountyRate": 0.0202,
+    "notes": ["IN county tax applies to every resident at 0.5%-3.4%; tool defaults to Marion County (Indianapolis, 2.02%)."]},
+  "AL": {"conforms401kPretax": true, "conformsHSA": false, "ltcgAsOrdinary": true, "ltcgExclusion": 0, "intDivAsOrdinary": true,
+    "notes": ["AL HSA conformity is partial; modeled here as non-conforming for simplicity."]},
+  "CA": {"conforms401kPretax": true, "conformsHSA": false, "ltcgAsOrdinary": true, "ltcgExclusion": 0, "intDivAsOrdinary": true,
+    "notes": [
+      "CA does not conform to federal HSA deduction; HSA contributions remain in CA taxable income.",
+      "Mental Health Services Tax (Prop 63 / MHSA): additional 1% on taxable income above $1,000,000 for all filing statuses. Encoded directly in income-brackets.json — top effective rate is 13.3% (12.3% + 1% MHSA), not 12.3%."
+    ]},
+  "HI": {"conforms401kPretax": true, "conformsHSA": true, "ltcgAsOrdinary": true, "ltcgExclusion": 0, "intDivAsOrdinary": true,
+    "ltcgAltRate": 0.0725,
+    "notes": ["Hawaii alternative tax on capital gains (HRS §235-51(f)) caps the LTCG rate at 7.25%. Calc takes the lesser of (a) ordinary bracket walk and (b) bracket walk on (stateAGI − LTCG) + 7.25% × LTCG. Taxpayer-friendly."]},
+  "MA": {"conforms401kPretax": true, "conformsHSA": true, "ltcgAsOrdinary": true, "ltcgExclusion": 0, "intDivAsOrdinary": true,
+    "notes": ["MA short-term capital gains taxed at 8.5% as separate schedule; not modeled — assumes long-term LTCG only."]},
+  "NJ": {"conforms401kPretax": false, "conformsHSA": false, "ltcgAsOrdinary": true, "ltcgExclusion": 0, "intDivAsOrdinary": true,
+    "notes": ["NJ does not allow employee 401(k) contributions to reduce wages; NJ does not conform to HSA deduction."]},
+  "PA": {"conforms401kPretax": true, "conformsHSA": false, "ltcgAsOrdinary": true, "ltcgExclusion": 0, "intDivAsOrdinary": true,
+    "notes": ["PA: Roth 401(k) contributions ARE taxable to PA but pretax 401(k) is not — model assumes pretax. PA does not conform to HSA deduction."]},
+  "WA": {"conforms401kPretax": true, "conformsHSA": true, "ltcgAsOrdinary": false,
+    "ltcgOverride": {"rateAbove": 0.07, "threshold": 270000},
+    "ltcgExclusion": 0, "intDivAsOrdinary": false,
+    "notes": ["WA imposes 7% LTCG above $270,000 standard deduction (2025). No tax on wages or interest/dividends."]},
+  "MT": {"conforms401kPretax": true, "conformsHSA": true, "ltcgAsOrdinary": true, "ltcgExclusion": 0.0, "intDivAsOrdinary": true,
+    "notes": ["MT historical 2% capital gains credit reduces effective rate; not modeled in seed."]},
+  "NH": {"conforms401kPretax": true, "conformsHSA": true, "ltcgAsOrdinary": false, "ltcgExclusion": 0, "intDivAsOrdinary": false,
+    "notes": ["NH I&D tax fully repealed as of 2025; NH has no wage tax."]},
+  "TN": {"conforms401kPretax": true, "conformsHSA": true, "ltcgAsOrdinary": false, "ltcgExclusion": 0, "intDivAsOrdinary": false,
+    "notes": ["TN Hall tax repealed effective 2021. No state income tax."]},
+
+  "CT": {
+    "conforms401kPretax": true, "conformsHSA": true, "ltcgAsOrdinary": true,
+    "ltcgExclusion": 0, "intDivAsOrdinary": true, "defaultCountyRate": 0,
+    "exemptionPhaseoutStart": {"mfj": 48000, "single": 30000, "hoh": 38000},
+    "recapture": {
+      "mfj": [
+        {"agi": 0,        "addOn": 0},
+        {"agi": 200000,   "addOn": 0},
+        {"agi": 213000,   "addOn": 450},
+        {"agi": 400000,   "addOn": 450},
+        {"agi": 500000,   "addOn": 2250},
+        {"agi": 625000,   "addOn": 4500},
+        {"agi": 700000,   "addOn": 6000},
+        {"agi": 1000000,  "addOn": 6000},
+        {"agi": 1050000,  "addOn": 7200},
+        {"agi": 100000000,"addOn": 7200}
+      ],
+      "single": [
+        {"agi": 0,        "addOn": 0},
+        {"agi": 100000,   "addOn": 0},
+        {"agi": 106500,   "addOn": 225},
+        {"agi": 200000,   "addOn": 225},
+        {"agi": 250000,   "addOn": 1125},
+        {"agi": 312500,   "addOn": 2250},
+        {"agi": 350000,   "addOn": 3000},
+        {"agi": 500000,   "addOn": 3000},
+        {"agi": 525000,   "addOn": 3600},
+        {"agi": 100000000,"addOn": 3600}
+      ],
+      "hoh": [
+        {"agi": 0,        "addOn": 0},
+        {"agi": 160000,   "addOn": 0},
+        {"agi": 170400,   "addOn": 360},
+        {"agi": 320000,   "addOn": 360},
+        {"agi": 400000,   "addOn": 1800},
+        {"agi": 500000,   "addOn": 3600},
+        {"agi": 560000,   "addOn": 4800},
+        {"agi": 800000,   "addOn": 4800},
+        {"agi": 840000,   "addOn": 5760},
+        {"agi": 100000000,"addOn": 5760}
+      ]
+    },
+    "notes": [
+      "CT has NO standard deduction; only a personal exemption ($24K MFJ / $15K single / $19K HoH 2024) that phases out completely at $1/$1 above thresholds (CGS §12-702). At $300K MFJ the exemption is fully phased out.",
+      "CT applies a 'tax recapture' (CGS §12-700b) that phases out the benefit of the lower bracket rates for high earners. Modeled here as a piecewise-linear add-on tax based on the 2024 IT-1040 worksheet. Approximation — see CT IT-1040 instructions for the exact formula. Recapture is small (~$450 at $300K MFJ) and grows to ~$7,200 at $1.05M+ MFJ.",
+      "CT also taxes capital gains at the same top 6.99% rate via a separate schedule; modeled here by treating LTCG as ordinary income (equivalent for top earners)."
+    ]
+  },
+
+  "NY": {
+    "conforms401kPretax": true, "conformsHSA": true, "ltcgAsOrdinary": true,
+    "ltcgExclusion": 0, "intDivAsOrdinary": true, "defaultCountyRate": 0,
+    "recapture": {
+      "mfj": [
+        {"agi": 0,         "addOn": 0},
+        {"agi": 107650,    "addOn": 0},
+        {"agi": 161550,    "addOn": 200},
+        {"agi": 323200,    "addOn": 1700},
+        {"agi": 2155350,   "addOn": 50000},
+        {"agi": 5000000,   "addOn": 200000},
+        {"agi": 100000000, "addOn": 200000}
+      ],
+      "single": [
+        {"agi": 0,         "addOn": 0},
+        {"agi": 107650,    "addOn": 0},
+        {"agi": 215400,    "addOn": 1300},
+        {"agi": 1077550,   "addOn": 25000},
+        {"agi": 5000000,   "addOn": 200000},
+        {"agi": 100000000, "addOn": 200000}
+      ],
+      "hoh": [
+        {"agi": 0,         "addOn": 0},
+        {"agi": 107650,    "addOn": 0},
+        {"agi": 269300,    "addOn": 1500},
+        {"agi": 1616450,   "addOn": 38000},
+        {"agi": 5000000,   "addOn": 200000},
+        {"agi": 100000000, "addOn": 200000}
+      ]
+    },
+    "notes": [
+      "NY 'tax computation worksheet' (IT-201-I) applies for NY taxable income > $107,650; it claws back the benefit of the lower-rate brackets for high earners. Modeled here as a piecewise-linear add-on tax. At $300K MFJ default scenario the recapture is ~$200; the effect grows substantially above $323K."
+    ]
+  }
+}

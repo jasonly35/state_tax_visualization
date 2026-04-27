@@ -1,0 +1,566 @@
+{
+  "_meta": {
+    "asOf": "2025",
+    "source": "State DOR publications + Tax Foundation 2025 individual income tax matrix. SEEDED VALUES — verify each state against DOR worksheet at $300K MFJ before publishing.",
+    "schema": "rates as decimals (0.05 = 5%); min is inclusive lower bound; standard deduction and exemptions in dollars; empty brackets array means no state income tax"
+  },
+  "AL": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.02}, {"min": 1000, "rate": 0.04}, {"min": 6000, "rate": 0.05}],
+      "single": [{"min": 0, "rate": 0.02}, {"min": 500, "rate": 0.04}, {"min": 3000, "rate": 0.05}],
+      "hoh": [{"min": 0, "rate": 0.02}, {"min": 500, "rate": 0.04}, {"min": 3000, "rate": 0.05}]
+    },
+    "stdDeduction": {"mfj": 8500, "single": 3000, "hoh": 5200},
+    "personalExemption": {"mfj": 3000, "single": 1500, "hoh": 3000},
+    "dependentExemption": 1000
+  },
+  "AK": {
+    "brackets": {"mfj": [], "single": [], "hoh": []},
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  },
+  "AZ": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.025}],
+      "single": [{"min": 0, "rate": 0.025}],
+      "hoh": [{"min": 0, "rate": 0.025}]
+    },
+    "stdDeduction": {"mfj": 30000, "single": 15000, "hoh": 22500},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 100
+  },
+  "AR": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0}, {"min": 5500, "rate": 0.02}, {"min": 11000, "rate": 0.03}, {"min": 25000, "rate": 0.039}],
+      "single": [{"min": 0, "rate": 0}, {"min": 5500, "rate": 0.02}, {"min": 11000, "rate": 0.03}, {"min": 25000, "rate": 0.039}],
+      "hoh": [{"min": 0, "rate": 0}, {"min": 5500, "rate": 0.02}, {"min": 11000, "rate": 0.03}, {"min": 25000, "rate": 0.039}]
+    },
+    "stdDeduction": {"mfj": 4720, "single": 2360, "hoh": 2360},
+    "personalExemption": {"mfj": 58, "single": 29, "hoh": 29},
+    "dependentExemption": 29
+  },
+  "CA": {
+    "_note": "Top three MFJ entries split at $1M to encode the 1% Mental Health Services Tax (Prop 63). MHSA applies to all filers on income over $1,000,000, so each bracket above $1M is the underlying rate + 1pt. Effective top rate = 13.3% (12.3% + 1% MHSA).",
+    "brackets": {
+      "mfj": [
+        {"min": 0, "rate": 0.01}, {"min": 21512, "rate": 0.02}, {"min": 50998, "rate": 0.04},
+        {"min": 80490, "rate": 0.06}, {"min": 111732, "rate": 0.08}, {"min": 141212, "rate": 0.093},
+        {"min": 721318, "rate": 0.103}, {"min": 865574, "rate": 0.113},
+        {"min": 1000000, "rate": 0.123},
+        {"min": 1442628, "rate": 0.133}
+      ],
+      "single": [
+        {"min": 0, "rate": 0.01}, {"min": 10756, "rate": 0.02}, {"min": 25499, "rate": 0.04},
+        {"min": 40245, "rate": 0.06}, {"min": 55866, "rate": 0.08}, {"min": 70606, "rate": 0.093},
+        {"min": 360659, "rate": 0.103}, {"min": 432787, "rate": 0.113}, {"min": 721314, "rate": 0.123},
+        {"min": 1000000, "rate": 0.133}
+      ],
+      "hoh": [
+        {"min": 0, "rate": 0.01}, {"min": 21527, "rate": 0.02}, {"min": 50998, "rate": 0.04},
+        {"min": 65744, "rate": 0.06}, {"min": 81364, "rate": 0.08}, {"min": 96107, "rate": 0.093},
+        {"min": 490493, "rate": 0.103}, {"min": 588593, "rate": 0.113}, {"min": 980987, "rate": 0.123},
+        {"min": 1000000, "rate": 0.133}
+      ]
+    },
+    "stdDeduction": {"mfj": 11080, "single": 5540, "hoh": 11080},
+    "personalExemption": {"mfj": 298, "single": 149, "hoh": 298},
+    "dependentExemption": 461
+  },
+  "CO": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.044}],
+      "single": [{"min": 0, "rate": 0.044}],
+      "hoh": [{"min": 0, "rate": 0.044}]
+    },
+    "stdDeduction": {"mfj": 30000, "single": 15000, "hoh": 22500},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  },
+  "CT": {
+    "_note": "CT has NO separate standard deduction; only the personal exemption, which fully phases out for high earners (state-rules.json encodes the phase-out start). Brackets are CT IT-1040 2024.",
+    "brackets": {
+      "mfj": [
+        {"min": 0, "rate": 0.02}, {"min": 20000, "rate": 0.045}, {"min": 100000, "rate": 0.055},
+        {"min": 200000, "rate": 0.06}, {"min": 400000, "rate": 0.065}, {"min": 500000, "rate": 0.069},
+        {"min": 1000000, "rate": 0.0699}
+      ],
+      "single": [
+        {"min": 0, "rate": 0.02}, {"min": 10000, "rate": 0.045}, {"min": 50000, "rate": 0.055},
+        {"min": 100000, "rate": 0.06}, {"min": 200000, "rate": 0.065}, {"min": 250000, "rate": 0.069},
+        {"min": 500000, "rate": 0.0699}
+      ],
+      "hoh": [
+        {"min": 0, "rate": 0.02}, {"min": 16000, "rate": 0.045}, {"min": 80000, "rate": 0.055},
+        {"min": 160000, "rate": 0.06}, {"min": 320000, "rate": 0.065}, {"min": 400000, "rate": 0.069},
+        {"min": 800000, "rate": 0.0699}
+      ]
+    },
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 24000, "single": 15000, "hoh": 19000},
+    "dependentExemption": 0
+  },
+  "DE": {
+    "brackets": {
+      "mfj": [
+        {"min": 0, "rate": 0}, {"min": 2000, "rate": 0.022}, {"min": 5000, "rate": 0.039},
+        {"min": 10000, "rate": 0.048}, {"min": 20000, "rate": 0.052}, {"min": 25000, "rate": 0.0555},
+        {"min": 60000, "rate": 0.066}
+      ],
+      "single": [
+        {"min": 0, "rate": 0}, {"min": 2000, "rate": 0.022}, {"min": 5000, "rate": 0.039},
+        {"min": 10000, "rate": 0.048}, {"min": 20000, "rate": 0.052}, {"min": 25000, "rate": 0.0555},
+        {"min": 60000, "rate": 0.066}
+      ],
+      "hoh": [
+        {"min": 0, "rate": 0}, {"min": 2000, "rate": 0.022}, {"min": 5000, "rate": 0.039},
+        {"min": 10000, "rate": 0.048}, {"min": 20000, "rate": 0.052}, {"min": 25000, "rate": 0.0555},
+        {"min": 60000, "rate": 0.066}
+      ]
+    },
+    "stdDeduction": {"mfj": 6500, "single": 3250, "hoh": 3250},
+    "personalExemption": {"mfj": 220, "single": 110, "hoh": 110},
+    "dependentExemption": 110
+  },
+  "FL": {
+    "brackets": {"mfj": [], "single": [], "hoh": []},
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  },
+  "GA": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.0539}],
+      "single": [{"min": 0, "rate": 0.0539}],
+      "hoh": [{"min": 0, "rate": 0.0539}]
+    },
+    "stdDeduction": {"mfj": 24000, "single": 12000, "hoh": 18500},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 4000
+  },
+  "HI": {
+    "brackets": {
+      "mfj": [
+        {"min": 0, "rate": 0.014}, {"min": 9600, "rate": 0.032}, {"min": 19200, "rate": 0.055},
+        {"min": 38400, "rate": 0.064}, {"min": 96000, "rate": 0.072}, {"min": 144000, "rate": 0.079},
+        {"min": 192000, "rate": 0.0825}, {"min": 600000, "rate": 0.09}, {"min": 700000, "rate": 0.10},
+        {"min": 800000, "rate": 0.11}
+      ],
+      "single": [
+        {"min": 0, "rate": 0.014}, {"min": 4800, "rate": 0.032}, {"min": 9600, "rate": 0.055},
+        {"min": 19200, "rate": 0.064}, {"min": 48000, "rate": 0.072}, {"min": 72000, "rate": 0.079},
+        {"min": 96000, "rate": 0.0825}, {"min": 300000, "rate": 0.09}, {"min": 350000, "rate": 0.10},
+        {"min": 400000, "rate": 0.11}
+      ],
+      "hoh": [
+        {"min": 0, "rate": 0.014}, {"min": 7200, "rate": 0.032}, {"min": 14400, "rate": 0.055},
+        {"min": 28800, "rate": 0.064}, {"min": 72000, "rate": 0.072}, {"min": 108000, "rate": 0.079},
+        {"min": 144000, "rate": 0.0825}, {"min": 450000, "rate": 0.09}, {"min": 525000, "rate": 0.10},
+        {"min": 600000, "rate": 0.11}
+      ]
+    },
+    "stdDeduction": {"mfj": 8800, "single": 4400, "hoh": 6424},
+    "personalExemption": {"mfj": 2288, "single": 1144, "hoh": 1144},
+    "dependentExemption": 1144
+  },
+  "ID": {
+    "_note": "Idaho HB-40 (2025 session) cut the flat rate to 5.3% effective tax year 2025, down from 5.695% in 2024.",
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.053}],
+      "single": [{"min": 0, "rate": 0.053}],
+      "hoh": [{"min": 0, "rate": 0.053}]
+    },
+    "stdDeduction": {"mfj": 30000, "single": 15000, "hoh": 22500},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  },
+  "IL": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.0495}],
+      "single": [{"min": 0, "rate": 0.0495}],
+      "hoh": [{"min": 0, "rate": 0.0495}]
+    },
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 5300, "single": 2650, "hoh": 2650},
+    "dependentExemption": 2650
+  },
+  "IN": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.0305}],
+      "single": [{"min": 0, "rate": 0.0305}],
+      "hoh": [{"min": 0, "rate": 0.0305}]
+    },
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 2000, "single": 1000, "hoh": 1000},
+    "dependentExemption": 1500
+  },
+  "IA": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.038}],
+      "single": [{"min": 0, "rate": 0.038}],
+      "hoh": [{"min": 0, "rate": 0.038}]
+    },
+    "stdDeduction": {"mfj": 5210, "single": 2210, "hoh": 5210},
+    "personalExemption": {"mfj": 80, "single": 40, "hoh": 80},
+    "dependentExemption": 40
+  },
+  "KS": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.052}, {"min": 46000, "rate": 0.0558}],
+      "single": [{"min": 0, "rate": 0.052}, {"min": 23000, "rate": 0.0558}],
+      "hoh": [{"min": 0, "rate": 0.052}, {"min": 23000, "rate": 0.0558}]
+    },
+    "stdDeduction": {"mfj": 8240, "single": 3605, "hoh": 6180},
+    "personalExemption": {"mfj": 18320, "single": 9160, "hoh": 9160},
+    "dependentExemption": 2320
+  },
+  "KY": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.04}],
+      "single": [{"min": 0, "rate": 0.04}],
+      "hoh": [{"min": 0, "rate": 0.04}]
+    },
+    "stdDeduction": {"mfj": 6200, "single": 3100, "hoh": 3100},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  },
+  "LA": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.03}],
+      "single": [{"min": 0, "rate": 0.03}],
+      "hoh": [{"min": 0, "rate": 0.03}]
+    },
+    "stdDeduction": {"mfj": 25000, "single": 12500, "hoh": 12500},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 1000
+  },
+  "ME": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.058}, {"min": 51700, "rate": 0.0675}, {"min": 122550, "rate": 0.0715}],
+      "single": [{"min": 0, "rate": 0.058}, {"min": 25850, "rate": 0.0675}, {"min": 61300, "rate": 0.0715}],
+      "hoh": [{"min": 0, "rate": 0.058}, {"min": 38800, "rate": 0.0675}, {"min": 91900, "rate": 0.0715}]
+    },
+    "stdDeduction": {"mfj": 28350, "single": 14150, "hoh": 21250},
+    "personalExemption": {"mfj": 10300, "single": 5150, "hoh": 5150},
+    "dependentExemption": 300
+  },
+  "MD": {
+    "brackets": {
+      "mfj": [
+        {"min": 0, "rate": 0.02}, {"min": 1000, "rate": 0.03}, {"min": 2000, "rate": 0.04},
+        {"min": 3000, "rate": 0.0475}, {"min": 150000, "rate": 0.05}, {"min": 175000, "rate": 0.0525},
+        {"min": 225000, "rate": 0.055}, {"min": 300000, "rate": 0.0575}
+      ],
+      "single": [
+        {"min": 0, "rate": 0.02}, {"min": 1000, "rate": 0.03}, {"min": 2000, "rate": 0.04},
+        {"min": 3000, "rate": 0.0475}, {"min": 100000, "rate": 0.05}, {"min": 125000, "rate": 0.0525},
+        {"min": 150000, "rate": 0.055}, {"min": 250000, "rate": 0.0575}
+      ],
+      "hoh": [
+        {"min": 0, "rate": 0.02}, {"min": 1000, "rate": 0.03}, {"min": 2000, "rate": 0.04},
+        {"min": 3000, "rate": 0.0475}, {"min": 150000, "rate": 0.05}, {"min": 175000, "rate": 0.0525},
+        {"min": 225000, "rate": 0.055}, {"min": 300000, "rate": 0.0575}
+      ]
+    },
+    "stdDeduction": {"mfj": 4850, "single": 2400, "hoh": 4850},
+    "personalExemption": {"mfj": 6400, "single": 3200, "hoh": 3200},
+    "dependentExemption": 3200
+  },
+  "MA": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.05}, {"min": 1083150, "rate": 0.09}],
+      "single": [{"min": 0, "rate": 0.05}, {"min": 1083150, "rate": 0.09}],
+      "hoh": [{"min": 0, "rate": 0.05}, {"min": 1083150, "rate": 0.09}]
+    },
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 8800, "single": 4400, "hoh": 6800},
+    "dependentExemption": 1000
+  },
+  "MI": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.0425}],
+      "single": [{"min": 0, "rate": 0.0425}],
+      "hoh": [{"min": 0, "rate": 0.0425}]
+    },
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 11400, "single": 5700, "hoh": 5700},
+    "dependentExemption": 5700
+  },
+  "MN": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.0535}, {"min": 47620, "rate": 0.068}, {"min": 189180, "rate": 0.0785}, {"min": 330410, "rate": 0.0985}],
+      "single": [{"min": 0, "rate": 0.0535}, {"min": 32570, "rate": 0.068}, {"min": 106990, "rate": 0.0785}, {"min": 198630, "rate": 0.0985}],
+      "hoh": [{"min": 0, "rate": 0.0535}, {"min": 40110, "rate": 0.068}, {"min": 161180, "rate": 0.0785}, {"min": 264520, "rate": 0.0985}]
+    },
+    "stdDeduction": {"mfj": 29150, "single": 14575, "hoh": 21900},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 5050
+  },
+  "MS": {
+    "_note": "Mississippi HB-531 phasedown: 4.7% (2024) → 4.4% (2025) → 4.0% (2026) on income above $10,000; income up to $10K is exempt.",
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0}, {"min": 10000, "rate": 0.044}],
+      "single": [{"min": 0, "rate": 0}, {"min": 10000, "rate": 0.044}],
+      "hoh": [{"min": 0, "rate": 0}, {"min": 10000, "rate": 0.044}]
+    },
+    "stdDeduction": {"mfj": 4600, "single": 2300, "hoh": 3400},
+    "personalExemption": {"mfj": 12000, "single": 6000, "hoh": 9500},
+    "dependentExemption": 1500
+  },
+  "MO": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0}, {"min": 1273, "rate": 0.02}, {"min": 2546, "rate": 0.025}, {"min": 3819, "rate": 0.03}, {"min": 5092, "rate": 0.035}, {"min": 6365, "rate": 0.04}, {"min": 7638, "rate": 0.045}, {"min": 8911, "rate": 0.047}],
+      "single": [{"min": 0, "rate": 0}, {"min": 1273, "rate": 0.02}, {"min": 2546, "rate": 0.025}, {"min": 3819, "rate": 0.03}, {"min": 5092, "rate": 0.035}, {"min": 6365, "rate": 0.04}, {"min": 7638, "rate": 0.045}, {"min": 8911, "rate": 0.047}],
+      "hoh": [{"min": 0, "rate": 0}, {"min": 1273, "rate": 0.02}, {"min": 2546, "rate": 0.025}, {"min": 3819, "rate": 0.03}, {"min": 5092, "rate": 0.035}, {"min": 6365, "rate": 0.04}, {"min": 7638, "rate": 0.045}, {"min": 8911, "rate": 0.047}]
+    },
+    "stdDeduction": {"mfj": 30000, "single": 15000, "hoh": 22500},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  },
+  "MT": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.047}, {"min": 41000, "rate": 0.059}],
+      "single": [{"min": 0, "rate": 0.047}, {"min": 20500, "rate": 0.059}],
+      "hoh": [{"min": 0, "rate": 0.047}, {"min": 30750, "rate": 0.059}]
+    },
+    "stdDeduction": {"mfj": 30000, "single": 15000, "hoh": 22500},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  },
+  "NE": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.0246}, {"min": 7390, "rate": 0.0351}, {"min": 44390, "rate": 0.0501}, {"min": 71540, "rate": 0.052}],
+      "single": [{"min": 0, "rate": 0.0246}, {"min": 3700, "rate": 0.0351}, {"min": 22195, "rate": 0.0501}, {"min": 35770, "rate": 0.052}],
+      "hoh": [{"min": 0, "rate": 0.0246}, {"min": 6900, "rate": 0.0351}, {"min": 35470, "rate": 0.0501}, {"min": 53000, "rate": 0.052}]
+    },
+    "stdDeduction": {"mfj": 16060, "single": 8030, "hoh": 11790},
+    "personalExemption": {"mfj": 320, "single": 160, "hoh": 160},
+    "dependentExemption": 160
+  },
+  "NV": {
+    "brackets": {"mfj": [], "single": [], "hoh": []},
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  },
+  "NH": {
+    "brackets": {"mfj": [], "single": [], "hoh": []},
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  },
+  "NJ": {
+    "brackets": {
+      "mfj": [
+        {"min": 0, "rate": 0.014}, {"min": 20000, "rate": 0.0175}, {"min": 50000, "rate": 0.0245},
+        {"min": 70000, "rate": 0.035}, {"min": 80000, "rate": 0.05525}, {"min": 150000, "rate": 0.0637},
+        {"min": 500000, "rate": 0.0897}, {"min": 1000000, "rate": 0.1075}
+      ],
+      "single": [
+        {"min": 0, "rate": 0.014}, {"min": 20000, "rate": 0.0175}, {"min": 35000, "rate": 0.035},
+        {"min": 40000, "rate": 0.05525}, {"min": 75000, "rate": 0.0637}, {"min": 500000, "rate": 0.0897},
+        {"min": 1000000, "rate": 0.1075}
+      ],
+      "hoh": [
+        {"min": 0, "rate": 0.014}, {"min": 20000, "rate": 0.0175}, {"min": 50000, "rate": 0.0245},
+        {"min": 70000, "rate": 0.035}, {"min": 80000, "rate": 0.05525}, {"min": 150000, "rate": 0.0637},
+        {"min": 500000, "rate": 0.0897}, {"min": 1000000, "rate": 0.1075}
+      ]
+    },
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 2000, "single": 1000, "hoh": 1000},
+    "dependentExemption": 1500
+  },
+  "NM": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.017}, {"min": 8000, "rate": 0.032}, {"min": 16000, "rate": 0.047}, {"min": 24000, "rate": 0.049}, {"min": 315000, "rate": 0.059}],
+      "single": [{"min": 0, "rate": 0.017}, {"min": 5500, "rate": 0.032}, {"min": 11000, "rate": 0.047}, {"min": 16000, "rate": 0.049}, {"min": 210000, "rate": 0.059}],
+      "hoh": [{"min": 0, "rate": 0.017}, {"min": 8000, "rate": 0.032}, {"min": 16000, "rate": 0.047}, {"min": 24000, "rate": 0.049}, {"min": 315000, "rate": 0.059}]
+    },
+    "stdDeduction": {"mfj": 30000, "single": 15000, "hoh": 22500},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 4000
+  },
+  "NY": {
+    "brackets": {
+      "mfj": [
+        {"min": 0, "rate": 0.04}, {"min": 17150, "rate": 0.045}, {"min": 23600, "rate": 0.0525},
+        {"min": 27900, "rate": 0.055}, {"min": 161550, "rate": 0.06}, {"min": 323200, "rate": 0.0685},
+        {"min": 2155350, "rate": 0.0965}, {"min": 5000000, "rate": 0.103}, {"min": 25000000, "rate": 0.109}
+      ],
+      "single": [
+        {"min": 0, "rate": 0.04}, {"min": 8500, "rate": 0.045}, {"min": 11700, "rate": 0.0525},
+        {"min": 13900, "rate": 0.055}, {"min": 80650, "rate": 0.06}, {"min": 215400, "rate": 0.0685},
+        {"min": 1077550, "rate": 0.0965}, {"min": 5000000, "rate": 0.103}, {"min": 25000000, "rate": 0.109}
+      ],
+      "hoh": [
+        {"min": 0, "rate": 0.04}, {"min": 12800, "rate": 0.045}, {"min": 17650, "rate": 0.0525},
+        {"min": 20900, "rate": 0.055}, {"min": 107650, "rate": 0.06}, {"min": 269300, "rate": 0.0685},
+        {"min": 1616450, "rate": 0.0965}, {"min": 5000000, "rate": 0.103}, {"min": 25000000, "rate": 0.109}
+      ]
+    },
+    "stdDeduction": {"mfj": 16050, "single": 8000, "hoh": 11200},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 1000
+  },
+  "NC": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.0425}],
+      "single": [{"min": 0, "rate": 0.0425}],
+      "hoh": [{"min": 0, "rate": 0.0425}]
+    },
+    "stdDeduction": {"mfj": 25500, "single": 12750, "hoh": 19125},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  },
+  "ND": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0}, {"min": 49450, "rate": 0.0195}, {"min": 246325, "rate": 0.025}],
+      "single": [{"min": 0, "rate": 0}, {"min": 49450, "rate": 0.0195}, {"min": 246325, "rate": 0.025}],
+      "hoh": [{"min": 0, "rate": 0}, {"min": 49450, "rate": 0.0195}, {"min": 246325, "rate": 0.025}]
+    },
+    "stdDeduction": {"mfj": 30000, "single": 15000, "hoh": 22500},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  },
+  "OH": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0}, {"min": 26050, "rate": 0.0275}, {"min": 100000, "rate": 0.035}],
+      "single": [{"min": 0, "rate": 0}, {"min": 26050, "rate": 0.0275}, {"min": 100000, "rate": 0.035}],
+      "hoh": [{"min": 0, "rate": 0}, {"min": 26050, "rate": 0.0275}, {"min": 100000, "rate": 0.035}]
+    },
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 5400, "single": 2700, "hoh": 2700},
+    "dependentExemption": 2700
+  },
+  "OK": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.0025}, {"min": 2000, "rate": 0.0075}, {"min": 5000, "rate": 0.0175}, {"min": 7500, "rate": 0.0275}, {"min": 9800, "rate": 0.0375}, {"min": 12200, "rate": 0.0475}],
+      "single": [{"min": 0, "rate": 0.0025}, {"min": 1000, "rate": 0.0075}, {"min": 2500, "rate": 0.0175}, {"min": 3750, "rate": 0.0275}, {"min": 4900, "rate": 0.0375}, {"min": 7200, "rate": 0.0475}],
+      "hoh": [{"min": 0, "rate": 0.0025}, {"min": 2000, "rate": 0.0075}, {"min": 5000, "rate": 0.0175}, {"min": 7500, "rate": 0.0275}, {"min": 9800, "rate": 0.0375}, {"min": 12200, "rate": 0.0475}]
+    },
+    "stdDeduction": {"mfj": 12700, "single": 6350, "hoh": 9350},
+    "personalExemption": {"mfj": 2000, "single": 1000, "hoh": 1000},
+    "dependentExemption": 1000
+  },
+  "OR": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.0475}, {"min": 8100, "rate": 0.0675}, {"min": 20200, "rate": 0.0875}, {"min": 250000, "rate": 0.099}],
+      "single": [{"min": 0, "rate": 0.0475}, {"min": 4050, "rate": 0.0675}, {"min": 10100, "rate": 0.0875}, {"min": 125000, "rate": 0.099}],
+      "hoh": [{"min": 0, "rate": 0.0475}, {"min": 8100, "rate": 0.0675}, {"min": 20200, "rate": 0.0875}, {"min": 250000, "rate": 0.099}]
+    },
+    "stdDeduction": {"mfj": 5495, "single": 2745, "hoh": 4435},
+    "personalExemption": {"mfj": 472, "single": 236, "hoh": 236},
+    "dependentExemption": 236
+  },
+  "PA": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.0307}],
+      "single": [{"min": 0, "rate": 0.0307}],
+      "hoh": [{"min": 0, "rate": 0.0307}]
+    },
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  },
+  "RI": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.0375}, {"min": 79900, "rate": 0.0475}, {"min": 181600, "rate": 0.0599}],
+      "single": [{"min": 0, "rate": 0.0375}, {"min": 79900, "rate": 0.0475}, {"min": 181600, "rate": 0.0599}],
+      "hoh": [{"min": 0, "rate": 0.0375}, {"min": 79900, "rate": 0.0475}, {"min": 181600, "rate": 0.0599}]
+    },
+    "stdDeduction": {"mfj": 21150, "single": 10550, "hoh": 15850},
+    "personalExemption": {"mfj": 9600, "single": 4800, "hoh": 4800},
+    "dependentExemption": 4800
+  },
+  "SC": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0}, {"min": 3460, "rate": 0.03}, {"min": 17330, "rate": 0.062}],
+      "single": [{"min": 0, "rate": 0}, {"min": 3460, "rate": 0.03}, {"min": 17330, "rate": 0.062}],
+      "hoh": [{"min": 0, "rate": 0}, {"min": 3460, "rate": 0.03}, {"min": 17330, "rate": 0.062}]
+    },
+    "stdDeduction": {"mfj": 30000, "single": 15000, "hoh": 22500},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 4790
+  },
+  "SD": {
+    "brackets": {"mfj": [], "single": [], "hoh": []},
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  },
+  "TN": {
+    "brackets": {"mfj": [], "single": [], "hoh": []},
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  },
+  "TX": {
+    "brackets": {"mfj": [], "single": [], "hoh": []},
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  },
+  "UT": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.0455}],
+      "single": [{"min": 0, "rate": 0.0455}],
+      "hoh": [{"min": 0, "rate": 0.0455}]
+    },
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 1941
+  },
+  "VT": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.0335}, {"min": 75000, "rate": 0.066}, {"min": 181150, "rate": 0.076}, {"min": 276200, "rate": 0.0875}],
+      "single": [{"min": 0, "rate": 0.0335}, {"min": 45400, "rate": 0.066}, {"min": 110050, "rate": 0.076}, {"min": 229550, "rate": 0.0875}],
+      "hoh": [{"min": 0, "rate": 0.0335}, {"min": 60750, "rate": 0.066}, {"min": 156800, "rate": 0.076}, {"min": 254000, "rate": 0.0875}]
+    },
+    "stdDeduction": {"mfj": 14050, "single": 7000, "hoh": 10450},
+    "personalExemption": {"mfj": 9300, "single": 4650, "hoh": 4650},
+    "dependentExemption": 4650
+  },
+  "VA": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.02}, {"min": 3000, "rate": 0.03}, {"min": 5000, "rate": 0.05}, {"min": 17000, "rate": 0.0575}],
+      "single": [{"min": 0, "rate": 0.02}, {"min": 3000, "rate": 0.03}, {"min": 5000, "rate": 0.05}, {"min": 17000, "rate": 0.0575}],
+      "hoh": [{"min": 0, "rate": 0.02}, {"min": 3000, "rate": 0.03}, {"min": 5000, "rate": 0.05}, {"min": 17000, "rate": 0.0575}]
+    },
+    "stdDeduction": {"mfj": 17000, "single": 8500, "hoh": 8500},
+    "personalExemption": {"mfj": 1860, "single": 930, "hoh": 930},
+    "dependentExemption": 930
+  },
+  "WA": {
+    "brackets": {"mfj": [], "single": [], "hoh": []},
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  },
+  "WV": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.0236}, {"min": 10000, "rate": 0.0315}, {"min": 25000, "rate": 0.0354}, {"min": 40000, "rate": 0.0472}, {"min": 60000, "rate": 0.0512}],
+      "single": [{"min": 0, "rate": 0.0236}, {"min": 10000, "rate": 0.0315}, {"min": 25000, "rate": 0.0354}, {"min": 40000, "rate": 0.0472}, {"min": 60000, "rate": 0.0512}],
+      "hoh": [{"min": 0, "rate": 0.0236}, {"min": 10000, "rate": 0.0315}, {"min": 25000, "rate": 0.0354}, {"min": 40000, "rate": 0.0472}, {"min": 60000, "rate": 0.0512}]
+    },
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 4000, "single": 2000, "hoh": 2000},
+    "dependentExemption": 2000
+  },
+  "WI": {
+    "brackets": {
+      "mfj": [{"min": 0, "rate": 0.035}, {"min": 19090, "rate": 0.044}, {"min": 38190, "rate": 0.053}, {"min": 420420, "rate": 0.0765}],
+      "single": [{"min": 0, "rate": 0.035}, {"min": 14320, "rate": 0.044}, {"min": 28640, "rate": 0.053}, {"min": 315310, "rate": 0.0765}],
+      "hoh": [{"min": 0, "rate": 0.035}, {"min": 14320, "rate": 0.044}, {"min": 28640, "rate": 0.053}, {"min": 315310, "rate": 0.0765}]
+    },
+    "stdDeduction": {"mfj": 23800, "single": 13230, "hoh": 17150},
+    "personalExemption": {"mfj": 1400, "single": 700, "hoh": 700},
+    "dependentExemption": 700
+  },
+  "WY": {
+    "brackets": {"mfj": [], "single": [], "hoh": []},
+    "stdDeduction": {"mfj": 0, "single": 0, "hoh": 0},
+    "personalExemption": {"mfj": 0, "single": 0, "hoh": 0},
+    "dependentExemption": 0
+  }
+}

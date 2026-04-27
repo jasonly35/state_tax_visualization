@@ -1,0 +1,20 @@
+{
+  "_meta": {
+    "asOf": "2022",
+    "source": "FHWA Highway Statistics 2022, Table VM-2 (annual VMT) divided by Table DL-22 (licensed drivers). Default profile uses 2× this value to model two-driver household.",
+    "schema": "perDriver is annual vehicle miles per licensed driver"
+  },
+  "AL": {"perDriver": 16500}, "AK": {"perDriver": 10000}, "AZ": {"perDriver": 13500}, "AR": {"perDriver": 17500},
+  "CA": {"perDriver": 12500}, "CO": {"perDriver": 13500}, "CT": {"perDriver": 12000}, "DE": {"perDriver": 13000},
+  "FL": {"perDriver": 14000}, "GA": {"perDriver": 16500}, "HI": {"perDriver": 9500}, "ID": {"perDriver": 14500},
+  "IL": {"perDriver": 12500}, "IN": {"perDriver": 16000}, "IA": {"perDriver": 14500}, "KS": {"perDriver": 14500},
+  "KY": {"perDriver": 14000}, "LA": {"perDriver": 13500}, "ME": {"perDriver": 13500}, "MD": {"perDriver": 13500},
+  "MA": {"perDriver": 12500}, "MI": {"perDriver": 13500}, "MN": {"perDriver": 14500}, "MS": {"perDriver": 18000},
+  "MO": {"perDriver": 16000}, "MT": {"perDriver": 14000}, "NE": {"perDriver": 13500}, "NV": {"perDriver": 13000},
+  "NH": {"perDriver": 12500}, "NJ": {"perDriver": 11500}, "NM": {"perDriver": 16000}, "NY": {"perDriver": 8500},
+  "NC": {"perDriver": 14500}, "ND": {"perDriver": 14500}, "OH": {"perDriver": 12000}, "OK": {"perDriver": 16000},
+  "OR": {"perDriver": 12000}, "PA": {"perDriver": 10500}, "RI": {"perDriver": 11000}, "SC": {"perDriver": 15500},
+  "SD": {"perDriver": 13500}, "TN": {"perDriver": 14500}, "TX": {"perDriver": 14000}, "UT": {"perDriver": 14000},
+  "VT": {"perDriver": 13000}, "VA": {"perDriver": 13000}, "WA": {"perDriver": 11500}, "WV": {"perDriver": 14000},
+  "WI": {"perDriver": 12500}, "WY": {"perDriver": 17500}
+}
