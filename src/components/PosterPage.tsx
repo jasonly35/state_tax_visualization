@@ -31,22 +31,32 @@ const COMP_COLORS = {
   income:   '#1e3a8a', // blue-900
   local:    '#3b82f6', // blue-500
   payroll:  '#8b5cf6', // violet-500
-  property: '#dc2626', // red-600
-  rent:     '#dc2626', // shares the property color since only one is non-zero
+  property: '#dc2626', // red-600 — also used for rent (only one is non-zero per profile)
   vehicle:  '#f59e0b', // amber-500
   sales:    '#10b981', // emerald-500
   gas:      '#64748b', // slate-500
 };
 
-const COMP_ORDER: Array<{ key: keyof typeof COMP_COLORS; label: string }> = [
-  { key: 'income',   label: 'State income' },
-  { key: 'local',    label: 'Local income' },
-  { key: 'payroll',  label: 'Payroll (SDI/PFML)' },
-  { key: 'property', label: 'Property / rent' },
-  { key: 'vehicle',  label: 'Vehicle property' },
-  { key: 'sales',    label: 'Sales' },
-  { key: 'gas',      label: 'Gas' },
-];
+type CompKey = keyof typeof COMP_COLORS;
+
+// Build the legend / bar-segment order with a label that reflects the active
+// housing mode (Property for owner; Rent for renter; the segment is hidden in
+// nomad mode since both values are zero).
+function buildCompOrder(housing: 'owner' | 'renter' | 'nomad'): Array<{ key: CompKey; label: string }> {
+  const housingLabel =
+    housing === 'renter' ? 'Rent' :
+    housing === 'nomad'  ? 'Property / rent' /* legend hidden anyway */ :
+    'Property';
+  return [
+    { key: 'income',   label: 'State income' },
+    { key: 'local',    label: 'Local income' },
+    { key: 'payroll',  label: 'Payroll (SDI/PFML)' },
+    { key: 'property', label: housingLabel },
+    { key: 'vehicle',  label: 'Vehicle property' },
+    { key: 'sales',    label: 'Sales' },
+    { key: 'gas',      label: 'Gas' },
+  ];
+}
 
 interface Props {
   profile: Profile;
@@ -79,7 +89,7 @@ export function PosterPage({ profile }: Props) {
     >
       <Header profile={profile} />
       <ChoroplethPanel breakdowns={breakdowns} sortedAsc={sortedAsc} sortedDesc={sortedDesc} />
-      <BarsPanel sortedDesc={sortedDesc} />
+      <BarsPanel sortedDesc={sortedDesc} housing={profile.housing} />
       <Footer />
     </div>
   );
@@ -287,13 +297,14 @@ function Callout({
 }
 
 // ---------------------------------------------------------------------------
-function BarsPanel({ sortedDesc }: { sortedDesc: Breakdown[] }) {
+function BarsPanel({ sortedDesc, housing }: { sortedDesc: Breakdown[]; housing: 'owner' | 'renter' | 'nomad' }) {
   const ROW_H = 22;
   const PAD_X = 60;
   const LEFT_LABEL_W = 140;
   const RIGHT_TOTAL_W = 110;
   const BAR_AREA_W = POSTER_W - 2 * PAD_X - LEFT_LABEL_W - RIGHT_TOTAL_W - 24;
   const maxTotal = sortedDesc[0]?.total ?? 1;
+  const compOrder = buildCompOrder(housing);
 
   return (
     <div style={{ padding: '8px 60px 24px 60px', borderTop: '1px solid #e2e8f0', marginTop: 8 }}>
@@ -304,7 +315,7 @@ function BarsPanel({ sortedDesc }: { sortedDesc: Breakdown[] }) {
         Sorted high to low. Stack shows component breakdown.
       </p>
 
-      <Legend />
+      <Legend compOrder={compOrder} />
 
       <svg viewBox={`0 0 ${POSTER_W - 2 * PAD_X} ${sortedDesc.length * ROW_H + 6}`} width="100%">
         {sortedDesc.map((b, i) => {
@@ -324,7 +335,7 @@ function BarsPanel({ sortedDesc }: { sortedDesc: Breakdown[] }) {
               </text>
               {/* Stack — 'property' segment merges property + rent so the segment
                   represents 'housing cost' regardless of owner/renter mode. */}
-              {COMP_ORDER.map((c) => {
+              {compOrder.map((c) => {
                 const v = c.key === 'property' ? b.property + b.rent : b[c.key];
                 if (v <= 0) return null;
                 const w = widthFor(v);
@@ -357,10 +368,10 @@ function BarsPanel({ sortedDesc }: { sortedDesc: Breakdown[] }) {
   );
 }
 
-function Legend() {
+function Legend({ compOrder }: { compOrder: Array<{ key: CompKey; label: string }> }) {
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px 18px', margin: '8px 0 12px 0' }}>
-      {COMP_ORDER.map((c) => (
+      {compOrder.map((c) => (
         <div key={c.key} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#334155' }}>
           <span
             style={{
