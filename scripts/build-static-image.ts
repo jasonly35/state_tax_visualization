@@ -69,7 +69,9 @@ async function main() {
     // Tiny additional settle to let any d3 paths finish.
     await new Promise((r) => setTimeout(r, 250));
 
-    const out = resolve(process.cwd(), 'poster.png');
+    // Write into public/ so it ships with the Vite build and is accessible at
+    // https://jasonly35.github.io/state_tax_visualization/poster.png after deploy.
+    const out = resolve(process.cwd(), 'public', 'poster.png');
     const buf = await page.screenshot({
       type: 'png',
       clip: { x: 0, y: 0, width: POSTER_W, height: POSTER_H },
