@@ -143,23 +143,70 @@ export function ProfilePanel({ profile, onChange, onReset }: Props) {
         />
       </Section>
 
-      <Section title="Home value">
-        <Field label={`Percentile of state distribution`}>
-          <select
-            value={profile.homeValue.kind === 'percentile' ? profile.homeValue.pct : 'custom'}
-            onChange={(e) =>
-              onChange({
-                ...profile,
-                homeValue: { kind: 'percentile', pct: Number(e.target.value) as 50 | 70 | 80 | 90 | 95 },
-              })
-            }
-            className="w-full rounded border border-slate-300 px-2 py-1"
-          >
-            {PCT_OPTIONS.map((p) => (
-              <option key={p} value={p}>p{p}</option>
+      <Section title="Housing">
+        <Field label="Mode">
+          <div className="flex w-full overflow-hidden rounded border border-slate-300">
+            {(['owner', 'renter', 'nomad'] as const).map((mode) => (
+              <button
+                key={mode}
+                type="button"
+                onClick={() => onChange({ ...profile, housing: mode })}
+                className={`flex-1 px-2 py-1 text-xs ${
+                  profile.housing === mode
+                    ? 'bg-slate-900 text-white'
+                    : 'bg-white text-slate-700 hover:bg-slate-100'
+                }`}
+              >
+                {mode === 'owner' ? 'Own' : mode === 'renter' ? 'Rent' : 'No housing'}
+              </button>
             ))}
-          </select>
+          </div>
+          <p className="mt-1.5 text-[11px] leading-4 text-slate-500">
+            {profile.housing === 'owner'
+              ? 'Property tax × home value at the chosen percentile.'
+              : profile.housing === 'renter'
+              ? 'Annual rent at the chosen percentile (no property tax). Rent is added to total for cost-of-living comparability — not technically a tax.'
+              : '"Van life" — no property tax, no rent. Cleanest pure-tax comparison.'}
+          </p>
         </Field>
+
+        {profile.housing === 'owner' && (
+          <Field label="Home value percentile (in the state's representative metro)">
+            <select
+              value={profile.homeValue.kind === 'percentile' ? profile.homeValue.pct : 'custom'}
+              onChange={(e) =>
+                onChange({
+                  ...profile,
+                  homeValue: { kind: 'percentile', pct: Number(e.target.value) as 50 | 70 | 80 | 90 | 95 },
+                })
+              }
+              className="w-full rounded border border-slate-300 px-2 py-1"
+            >
+              {PCT_OPTIONS.map((p) => (
+                <option key={p} value={p}>p{p}</option>
+              ))}
+            </select>
+          </Field>
+        )}
+
+        {profile.housing === 'renter' && (
+          <Field label="Rent percentile (in the state's representative metro)">
+            <select
+              value={profile.rent.kind === 'percentile' ? profile.rent.pct : 'custom'}
+              onChange={(e) =>
+                onChange({
+                  ...profile,
+                  rent: { kind: 'percentile', pct: Number(e.target.value) as 50 | 70 | 80 | 90 | 95 },
+                })
+              }
+              className="w-full rounded border border-slate-300 px-2 py-1"
+            >
+              {PCT_OPTIONS.map((p) => (
+                <option key={p} value={p}>p{p}</option>
+              ))}
+            </select>
+          </Field>
+        )}
       </Section>
 
       <Section title="Annual consumption">

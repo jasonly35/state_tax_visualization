@@ -60,13 +60,32 @@ export function MethodologyPage({ onBack }: Props) {
               applicable.
             </LI>
             <LI>
-              <B>Property tax</B> — new-buyer effective rate at the representative metro
-              (LA for CA, Chicago for IL, Houston for TX, Seattle for WA, NYC for NY,
-              etc.) times home value at the chosen percentile of THAT metro's
-              distribution. Includes base ad-valorem + voter-approved bonds + school
-              district levies + typical special assessments. Long-tenured-owner
-              assessment caps (Prop 13, SOH, TX 10%) are explicitly NOT applied — the
-              tool is for relocation scenarios.
+              <B>Housing</B> — three modes:
+              <UL>
+                <LI>
+                  <B>Owner</B> (default): property tax at the new-buyer effective rate
+                  at the representative metro (LA 1.25%, Chicago 2.27%, Houston 2.20%,
+                  Seattle 0.92%, etc.) × home value at the chosen percentile of THAT
+                  metro's distribution. Includes base ad-valorem + voter-approved bonds
+                  + school district levies + typical special assessments. Long-tenured
+                  caps (Prop 13, SOH, TX 10%) are NOT applied — the tool is for
+                  relocation scenarios.
+                </LI>
+                <LI>
+                  <B>Renter</B>: substitutes property tax with annual rent at the same
+                  percentile in the same metro (Zillow ZORI Q4 2024). Rent is added to
+                  the total for cost-of-living comparability — not technically a tax,
+                  but it answers "what does it actually cost me to live here?". Renters
+                  do pay property tax indirectly through rent, but the explicit tax
+                  line is set to zero in this mode.
+                </LI>
+                <LI>
+                  <B>No housing</B> ("van life"): both property tax and rent set to
+                  zero. This is the cleanest pure-tax-burden view, useful for
+                  isolating the income/sales/payroll/gas/vehicle component of state
+                  taxation independent of housing decisions.
+                </LI>
+              </UL>
             </LI>
             <LI>
               <B>Vehicle property tax</B> — VA, CT, MO, MS, ME, WV, RI, KY, NC, SC, AL,
@@ -192,6 +211,15 @@ export function MethodologyPage({ onBack }: Props) {
             urls={[
               ['Zillow Research — ZHVI metro-level series', 'https://www.zillow.com/research/data/'],
               ['ACS B25075 — Value of owner-occupied housing units (cross-check)', 'https://data.census.gov/table?q=B25075'],
+            ]}
+          />
+
+          <SourceBlock
+            file="rent-values.json"
+            primary="Zillow ZORI (Observed Rent Index) metro-level series, Q4 2024, annualized (×12). Percentile shape derived from metro distribution (p50≈1.0×, p70≈1.2×, p80≈1.35×, p90≈1.6×, p95≈2.0×) — tighter than home values since rentals don't have the same upper-tail outliers. Used in the renter housing mode."
+            urls={[
+              ['Zillow Research — ZORI metro series', 'https://www.zillow.com/research/data/'],
+              ['ACS B25064 — Median gross rent (cross-check)', 'https://data.census.gov/table?q=B25064'],
             ]}
           />
 

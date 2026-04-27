@@ -81,6 +81,17 @@ export interface HomeValueRow {
   source: string;
 }
 
+export interface RentValueRow {
+  /** Annual rent at the labeled percentile of rentals within the representative metro. */
+  p50: number;
+  p70: number;
+  p80: number;
+  p90: number;
+  p95: number;
+  city: string;
+  source: string;
+}
+
 export interface SalesRate {
   /** State + average local combined effective rate, applied to taxable consumption. */
   combined: number;
@@ -146,6 +157,7 @@ export interface StateData {
   rules: StateRule;
   property: PropertyRate;
   home: HomeValueRow;
+  rent: RentValueRow;
   sales: SalesRate;
   consumption: ConsumptionRow;
   gas: GasTaxRow;
@@ -168,7 +180,11 @@ export interface Breakdown {
   local: number;
   /** State payroll-style worker contributions (CA SDI, WA PFML+Cares, NY PFL, etc.). */
   payroll: number;
+  /** Property tax on a metro-percentile home (only set when housing = 'owner'). */
   property: number;
+  /** Annual rent at metro percentile (only set when housing = 'renter'). NOT a tax,
+   *  but added to `total` so the comparison is housing-comparable across states. */
+  rent: number;
   /** Personal property tax on motor vehicles (VA, CT, MO, MS, etc.). */
   vehicle: number;
   sales: number;
@@ -177,6 +193,7 @@ export interface Breakdown {
   effectiveRate: number;
   inputs: {
     homeValueUsd: number;
+    rentUsd: number;
     consumptionUsd: number;
     vehicleValueUsd: number;
     annualMiles: number;
@@ -186,5 +203,6 @@ export interface Breakdown {
     /** Effective city used (state default if profile.city was 'state_default'). */
     city: LocalCity;
     filing: FilingStatus;
+    housing: 'owner' | 'renter' | 'nomad';
   };
 }

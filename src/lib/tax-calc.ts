@@ -46,6 +46,12 @@ export function resolveHomeValue(profile: Profile, state: StateData): number {
   return state.home[`p${v.pct}` as const];
 }
 
+export function resolveRent(profile: Profile, state: StateData): number {
+  const v = profile.rent;
+  if (v.kind === 'amount') return v.usd;
+  return state.rent[`p${v.pct}` as const];
+}
+
 export function resolveConsumption(profile: Profile, state: StateData): number {
   const v = profile.consumption;
   if (v.kind === 'amount') return v.usd;
@@ -192,7 +198,13 @@ export function computeLocalTax(
 // Property, sales, gas — straightforward.
 
 export function computePropertyTax(profile: Profile, state: StateData): number {
+  if (profile.housing !== 'owner') return 0;
   return resolveHomeValue(profile, state) * state.property.rate;
+}
+
+export function computeRent(profile: Profile, state: StateData): number {
+  if (profile.housing !== 'renter') return 0;
+  return resolveRent(profile, state);
 }
 
 export function computeSalesTax(profile: Profile, state: StateData): number {
@@ -307,12 +319,16 @@ export function computeBreakdown(
 ): Breakdown {
   const income = computeStateIncomeTax(profile, state);
   const property = computePropertyTax(profile, state);
+  const rent = computeRent(profile, state);
   const sales = computeSalesTax(profile, state);
   const gas = computeGasTax(profile, state);
   const local = computeLocalTax(profile, overlay);
   const payroll = computePayrollTax(profile, state);
   const vehicle = computeVehicleTax(profile, state);
-  const total = income.tax + property + sales + gas + local + payroll + vehicle;
+  // Rent is added to total so the comparison stays apples-to-apples across
+  // housing modes — but it's labeled as "Housing (rent)" in the UI to make
+  // clear it's an expense, not a tax.
+  const total = income.tax + property + rent + sales + gas + local + payroll + vehicle;
   const federal = computeFederalTax(profile);
   return {
     state: state.code,
@@ -321,6 +337,7 @@ export function computeBreakdown(
     local,
     payroll,
     property,
+    rent,
     vehicle,
     sales,
     gas,
@@ -328,6 +345,7 @@ export function computeBreakdown(
     effectiveRate: profile.grossIncome > 0 ? total / profile.grossIncome : 0,
     inputs: {
       homeValueUsd: resolveHomeValue(profile, state),
+      rentUsd: resolveRent(profile, state),
       consumptionUsd: resolveConsumption(profile, state),
       vehicleValueUsd: profile.vehicleValue,
       annualMiles: profile.annualMiles,
@@ -336,6 +354,7 @@ export function computeBreakdown(
       appliedHSA: income.appliedHSA,
       city: resolvedCity,
       filing: profile.filingStatus,
+      housing: profile.housing,
     },
   };
 }

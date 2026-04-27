@@ -4,6 +4,7 @@
 import incomeBracketsRaw from '../data/income-brackets.json';
 import propertyRatesRaw from '../data/property-rates.json';
 import homeValuesRaw from '../data/home-values.json';
+import rentValuesRaw from '../data/rent-values.json';
 import salesRatesRaw from '../data/sales-rates.json';
 import gasTaxesRaw from '../data/gas-taxes.json';
 import milesRaw from '../data/miles-per-driver.json';
@@ -51,6 +52,7 @@ function rulesFor(code: StateCode): StateRule {
 const incomeMap = incomeBracketsRaw as unknown as Record<string, RawIncome>;
 const propertyMap = propertyRatesRaw as unknown as Record<string, { rate: number; city: string; notes?: string; source?: string }>;
 const homeMap = homeValuesRaw as unknown as Record<string, { p50: number; p70: number; p80: number; p90: number; p95: number; city: string }>;
+const rentMap = rentValuesRaw as unknown as Record<string, { p50: number; p70: number; p80: number; p90: number; p95: number; city: string }>;
 const salesMap = salesRatesRaw as unknown as Record<string, { combined: number }>;
 const gasMap = gasTaxesRaw as unknown as Record<string, { perGallon: number }>;
 const milesMap = milesRaw as unknown as Record<string, { perDriver: number }>;
@@ -91,6 +93,10 @@ export const STATE_DATA: StateData[] = STATES.map((code) => {
     home: (() => {
       const h = pick<{ p50: number; p70: number; p80: number; p90: number; p95: number; city: string }>(homeMap, code, 'home values');
       return { p50: h.p50, p70: h.p70, p80: h.p80, p90: h.p90, p95: h.p95, city: h.city, source: SOURCE_TAG };
+    })(),
+    rent: (() => {
+      const r = pick<{ p50: number; p70: number; p80: number; p90: number; p95: number; city: string }>(rentMap, code, 'rent values');
+      return { p50: r.p50, p70: r.p70, p80: r.p80, p90: r.p90, p95: r.p95, city: r.city, source: SOURCE_TAG };
     })(),
     sales: { combined: pick<{ combined: number }>(salesMap, code, 'sales rate').combined, source: SOURCE_TAG },
     consumption: { ...pick<{ p50: number; p70: number; p80: number; p90: number; p95: number }>(consumptionMap, code, 'consumption'), source: SOURCE_TAG },

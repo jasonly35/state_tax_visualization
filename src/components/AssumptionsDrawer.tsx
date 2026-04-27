@@ -22,7 +22,12 @@ export function AssumptionsDrawer({ breakdown: b, onClose }: Props) {
         <Row label="State income tax (incl. county)" value={fmtUSD(b.income)} />
         <Row label="Local income tax" value={fmtUSD(b.local)} />
         <Row label="Payroll (SDI/PFML/Cares)" value={fmtUSD(b.payroll)} />
-        <Row label={`Property tax (${s.property.city}, ${(s.property.rate * 100).toFixed(2)}%)`} value={fmtUSD(b.property)} />
+        {b.inputs.housing === 'owner' && (
+          <Row label={`Property tax (${s.property.city}, ${(s.property.rate * 100).toFixed(2)}%)`} value={fmtUSD(b.property)} />
+        )}
+        {b.inputs.housing === 'renter' && (
+          <Row label={`Rent (${s.rent.city}, annual)`} value={fmtUSD(b.rent)} />
+        )}
         <Row label="Vehicle property tax" value={fmtUSD(b.vehicle)} />
         <Row label="Sales tax" value={fmtUSD(b.sales)} />
         <Row label="Gas tax" value={fmtUSD(b.gas)} />
@@ -32,7 +37,13 @@ export function AssumptionsDrawer({ breakdown: b, onClose }: Props) {
       <h3 className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">Inputs used</h3>
       <div className="mt-1 grid grid-cols-2 gap-x-6 gap-y-1 text-xs">
         <Row label="Filing" value={b.inputs.filing.toUpperCase()} />
-        <Row label={`Home value (${s.home.city})`} value={fmtUSD(b.inputs.homeValueUsd)} />
+        <Row label="Housing mode" value={b.inputs.housing} />
+        {b.inputs.housing === 'owner' && (
+          <Row label={`Home value (${s.home.city})`} value={fmtUSD(b.inputs.homeValueUsd)} />
+        )}
+        {b.inputs.housing === 'renter' && (
+          <Row label={`Rent annual (${s.rent.city})`} value={fmtUSD(b.inputs.rentUsd)} />
+        )}
         <Row label="Annual taxable consumption" value={fmtUSD(b.inputs.consumptionUsd)} />
         <Row label="Vehicle value (assumed)" value={fmtUSD(b.inputs.vehicleValueUsd)} />
         <Row label="Annual miles" value={b.inputs.annualMiles.toLocaleString()} />

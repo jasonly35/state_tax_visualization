@@ -4,7 +4,7 @@ import type { StateCode } from '../lib/profile';
 import { STATE_BY_CODE } from '../lib/load-data';
 import { fmtPctShort, fmtUSD } from '../lib/format';
 
-type SortKey = 'total' | 'effectiveRate' | 'income' | 'payroll' | 'property' | 'vehicle' | 'sales' | 'gas';
+type SortKey = 'total' | 'effectiveRate' | 'income' | 'payroll' | 'housing' | 'vehicle' | 'sales' | 'gas';
 
 interface Props {
   breakdowns: Breakdown[];
@@ -17,7 +17,7 @@ const COLUMNS: { key: SortKey; label: string }[] = [
   { key: 'effectiveRate', label: '% gross' },
   { key: 'income', label: 'Income' },
   { key: 'payroll', label: 'Payroll' },
-  { key: 'property', label: 'Property' },
+  { key: 'housing', label: 'Housing' },
   { key: 'vehicle', label: 'Vehicle' },
   { key: 'sales', label: 'Sales' },
   { key: 'gas', label: 'Gas' },
@@ -27,9 +27,14 @@ export function RankedList({ breakdowns, selected, onSelect }: Props) {
   const [sortBy, setSortBy] = useState<SortKey>('total');
   const [asc, setAsc] = useState(false);
 
+  // Most sort keys map directly to Breakdown fields; 'housing' is the sum of
+  // property + rent (only one is non-zero at a time depending on housing mode).
+  const valueOf = (b: Breakdown, key: SortKey): number =>
+    key === 'housing' ? b.property + b.rent : (b as unknown as Record<string, number>)[key];
+
   const sorted = useMemo(() => {
     const arr = [...breakdowns];
-    arr.sort((a, b) => (asc ? a[sortBy] - b[sortBy] : b[sortBy] - a[sortBy]));
+    arr.sort((a, b) => (asc ? valueOf(a, sortBy) - valueOf(b, sortBy) : valueOf(b, sortBy) - valueOf(a, sortBy)));
     return arr;
   }, [breakdowns, sortBy, asc]);
 
@@ -71,7 +76,7 @@ export function RankedList({ breakdowns, selected, onSelect }: Props) {
                 <td className="px-2 py-1 text-right tabular-nums">{fmtPctShort(b.effectiveRate)}</td>
                 <td className="px-2 py-1 text-right tabular-nums text-slate-500">{fmtUSD(b.income + b.local)}</td>
                 <td className="px-2 py-1 text-right tabular-nums text-slate-500">{fmtUSD(b.payroll)}</td>
-                <td className="px-2 py-1 text-right tabular-nums text-slate-500">{fmtUSD(b.property)}</td>
+                <td className="px-2 py-1 text-right tabular-nums text-slate-500">{fmtUSD(b.property + b.rent)}</td>
                 <td className="px-2 py-1 text-right tabular-nums text-slate-500">{fmtUSD(b.vehicle)}</td>
                 <td className="px-2 py-1 text-right tabular-nums text-slate-500">{fmtUSD(b.sales)}</td>
                 <td className="px-2 py-1 text-right tabular-nums text-slate-500">{fmtUSD(b.gas)}</td>

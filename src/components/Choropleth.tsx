@@ -214,7 +214,8 @@ export function Choropleth({ breakdowns, selected, onSelect }: Props) {
             <Row label="State income" value={fmtUSD(activeBreakdown.income)} />
             {activeBreakdown.local > 0 && <Row label="Local income" value={fmtUSD(activeBreakdown.local)} />}
             {activeBreakdown.payroll > 0 && <Row label="Payroll (SDI/PFML)" value={fmtUSD(activeBreakdown.payroll)} />}
-            <Row label="Property" value={fmtUSD(activeBreakdown.property)} />
+            {activeBreakdown.property > 0 && <Row label="Property" value={fmtUSD(activeBreakdown.property)} />}
+            {activeBreakdown.rent > 0 && <Row label="Rent" value={fmtUSD(activeBreakdown.rent)} />}
             {activeBreakdown.vehicle > 0 && <Row label="Vehicle property" value={fmtUSD(activeBreakdown.vehicle)} />}
             <Row label="Sales" value={fmtUSD(activeBreakdown.sales)} />
             <Row label="Gas" value={fmtUSD(activeBreakdown.gas)} />

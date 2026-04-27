@@ -32,6 +32,7 @@ const COMP_COLORS = {
   local:    '#3b82f6', // blue-500
   payroll:  '#8b5cf6', // violet-500
   property: '#dc2626', // red-600
+  rent:     '#dc2626', // shares the property color since only one is non-zero
   vehicle:  '#f59e0b', // amber-500
   sales:    '#10b981', // emerald-500
   gas:      '#64748b', // slate-500
@@ -41,7 +42,7 @@ const COMP_ORDER: Array<{ key: keyof typeof COMP_COLORS; label: string }> = [
   { key: 'income',   label: 'State income' },
   { key: 'local',    label: 'Local income' },
   { key: 'payroll',  label: 'Payroll (SDI/PFML)' },
-  { key: 'property', label: 'Property' },
+  { key: 'property', label: 'Property / rent' },
   { key: 'vehicle',  label: 'Vehicle property' },
   { key: 'sales',    label: 'Sales' },
   { key: 'gas',      label: 'Gas' },
@@ -321,9 +322,10 @@ function BarsPanel({ sortedDesc }: { sortedDesc: Breakdown[] }) {
               >
                 {STATE_BY_CODE[b.state].name}
               </text>
-              {/* Stack */}
+              {/* Stack — 'property' segment merges property + rent so the segment
+                  represents 'housing cost' regardless of owner/renter mode. */}
               {COMP_ORDER.map((c) => {
-                const v = b[c.key];
+                const v = c.key === 'property' ? b.property + b.rent : b[c.key];
                 if (v <= 0) return null;
                 const w = widthFor(v);
                 const segX = x;

@@ -220,6 +220,42 @@ describe('payroll / worker contributions', () => {
   });
 });
 
+describe('housing modes', () => {
+  it('owner: property tax > 0, rent = 0', () => {
+    const p: Profile = { ...DEFAULT_PROFILE, housing: 'owner' };
+    const resolver = makeOverlayResolver('state_default');
+    const r = resolver(STATE_BY_CODE.CA);
+    const b = computeBreakdown(p, STATE_BY_CODE.CA, r.overlay, r.city);
+    expect(b.property).toBeGreaterThan(0);
+    expect(b.rent).toBe(0);
+    expect(b.inputs.housing).toBe('owner');
+  });
+
+  it('renter: rent > 0, property tax = 0; rent included in total', () => {
+    const p: Profile = { ...DEFAULT_PROFILE, housing: 'renter' };
+    const resolver = makeOverlayResolver('state_default');
+    const r = resolver(STATE_BY_CODE.CA);
+    const b = computeBreakdown(p, STATE_BY_CODE.CA, r.overlay, r.city);
+    expect(b.property).toBe(0);
+    expect(b.rent).toBeGreaterThan(0);
+    // Rent must be in total
+    expect(b.total).toBe(b.income + b.local + b.payroll + b.property + b.rent + b.vehicle + b.sales + b.gas);
+    // LA p80 annual rent ≈ $45,360 (33,600 × 1.35)
+    expect(b.rent).toBe(45_360);
+  });
+
+  it('nomad: both property and rent are 0', () => {
+    const p: Profile = { ...DEFAULT_PROFILE, housing: 'nomad' };
+    const resolver = makeOverlayResolver('state_default');
+    const r = resolver(STATE_BY_CODE.CA);
+    const b = computeBreakdown(p, STATE_BY_CODE.CA, r.overlay, r.city);
+    expect(b.property).toBe(0);
+    expect(b.rent).toBe(0);
+    // Total is purely tax in nomad mode
+    expect(b.total).toBe(b.income + b.local + b.payroll + b.vehicle + b.sales + b.gas);
+  });
+});
+
 describe('vehicle property tax', () => {
   const p = DEFAULT_PROFILE;
 
@@ -349,10 +385,10 @@ describe('federal tax for context', () => {
   });
 });
 
-describe('profile URL serialization (v2)', () => {
+describe('profile URL serialization (v3)', () => {
   it('round-trips the default profile', () => {
     const s = serializeProfile(DEFAULT_PROFILE);
-    expect(s.startsWith('v2|')).toBe(true);
+    expect(s.startsWith('v3|')).toBe(true);
     const back = deserializeProfile(s);
     expect(back).not.toBeNull();
     expect(back!.grossIncome).toBe(DEFAULT_PROFILE.grossIncome);
@@ -362,11 +398,13 @@ describe('profile URL serialization (v2)', () => {
     expect(back!.hsaContribution).toBe(8_550);
     expect(back!.vehicleValue).toBe(DEFAULT_PROFILE.vehicleValue);
     expect(back!.city).toBe('state_default');
+    expect(back!.housing).toBe('owner');
     expect(back!.homeValue).toEqual({ kind: 'percentile', pct: 80 });
+    expect(back!.rent).toEqual({ kind: 'percentile', pct: 80 });
     expect(back!.consumption).toEqual({ kind: 'percentile', pct: 80 });
   });
 
-  it('round-trips a custom profile with amount-kind values', () => {
+  it('round-trips a custom profile with amount-kind values + renter mode', () => {
     const p: Profile = {
       ...DEFAULT_PROFILE,
       grossIncome: 850_000,
@@ -374,7 +412,9 @@ describe('profile URL serialization (v2)', () => {
       filingStatus: 'single',
       dependents: 0,
       city: 'nyc',
+      housing: 'renter',
       homeValue: { kind: 'amount', usd: 1_500_000 },
+      rent: { kind: 'amount', usd: 60_000 },
       consumption: { kind: 'amount', usd: 80_000 },
       vehicleValue: 150_000,
       annualMiles: 18_000,
@@ -384,16 +424,26 @@ describe('profile URL serialization (v2)', () => {
     expect(back.grossIncome).toBe(850_000);
     expect(back.filingStatus).toBe('single');
     expect(back.city).toBe('nyc');
+    expect(back.housing).toBe('renter');
     expect(back.vehicleValue).toBe(150_000);
     expect(back.homeValue).toEqual({ kind: 'amount', usd: 1_500_000 });
+    expect(back.rent).toEqual({ kind: 'amount', usd: 60_000 });
     expect(back.consumption).toEqual({ kind: 'amount', usd: 80_000 });
     expect(Math.abs(back.incomeMix.w2 - 0.5)).toBeLessThan(0.001);
     expect(Math.abs(back.incomeMix.ltcg - 0.3)).toBeLessThan(0.001);
   });
 
-  it('rejects malformed strings and old v1 strings', () => {
+  it('round-trips nomad mode', () => {
+    const p: Profile = { ...DEFAULT_PROFILE, housing: 'nomad' };
+    const s = serializeProfile(p);
+    const back = deserializeProfile(s)!;
+    expect(back.housing).toBe('nomad');
+  });
+
+  it('rejects malformed strings and older versions', () => {
     expect(deserializeProfile('garbage')).toBeNull();
-    expect(deserializeProfile('v2|too|few')).toBeNull();
+    expect(deserializeProfile('v3|too|few')).toBeNull();
+    expect(deserializeProfile('v2|valid|but|old|schema|that|is|wrong')).toBeNull();
     expect(deserializeProfile('v1|valid|but|old|schema|that|is|wrong')).toBeNull();
   });
 });
