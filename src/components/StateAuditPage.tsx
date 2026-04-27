@@ -120,14 +120,14 @@ export function StateAuditPage({ onBack }: Props) {
   return (
     <div className="min-h-full bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-3">
+        <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
           <button onClick={onBack} className="text-xs text-sky-700 hover:underline">
             ← back to map
           </button>
         </div>
       </header>
 
-      <article className="mx-auto max-w-7xl px-6 py-10 text-slate-700">
+      <article className="mx-auto max-w-7xl px-4 py-6 text-slate-700 sm:px-6 sm:py-10">
         <h1 className="text-3xl font-bold tracking-tight text-slate-900">
           Per-state data audit
         </h1>
@@ -137,8 +137,9 @@ export function StateAuditPage({ onBack }: Props) {
           under <code className="rounded bg-slate-100 px-1 py-0.5 font-mono text-[0.85em]">src/data/</code>.
         </p>
 
-        <div className="mt-6 overflow-auto rounded-lg border border-slate-200 bg-white shadow-sm">
-          <table className="w-full text-xs">
+        <p className="mt-6 pb-1 text-[10px] text-slate-400 sm:hidden">scroll horizontally to see all columns →</p>
+        <div className="mt-2 overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm sm:mt-6">
+          <table className="w-full min-w-[1080px] text-xs">
             <thead className="sticky top-0 bg-slate-100 text-slate-700">
               <tr>
                 <Th label="State" sortKey="name" sortBy={sortBy} asc={asc} onClick={handleSort} align="left" />

@@ -76,7 +76,7 @@ export function Choropleth({ breakdowns, selected, onSelect }: Props) {
   const activeBreakdown = activeCode ? byCode.get(activeCode) ?? null : null;
 
   return (
-    <div ref={wrapRef} className="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-50 shadow-sm">
+    <div ref={wrapRef} className="relative overflow-hidden rounded-lg border border-slate-200 bg-slate-50 shadow-sm sm:rounded-xl">
       <svg
         viewBox={`0 0 ${WIDTH} ${HEIGHT + LEGEND_HEIGHT}`}
         className="h-auto w-full"
@@ -181,10 +181,10 @@ export function Choropleth({ breakdowns, selected, onSelect }: Props) {
         </g>
       </svg>
 
-      {/* Floating tooltip */}
+      {/* Floating tooltip — caps width to fit narrow viewports without overflow */}
       {activeBreakdown && (
-        <div className="pointer-events-none absolute right-3 top-3 max-w-xs rounded-lg border border-slate-200 bg-white/95 p-3 text-xs shadow-lg backdrop-blur-sm">
-          <div className="text-sm font-semibold text-slate-900">
+        <div className="pointer-events-none absolute right-2 top-2 w-[180px] max-w-[60%] rounded-lg border border-slate-200 bg-white/95 p-2 text-[11px] shadow-lg backdrop-blur-sm sm:right-3 sm:top-3 sm:w-auto sm:max-w-xs sm:p-3 sm:text-xs">
+          <div className="text-xs font-semibold text-slate-900 sm:text-sm">
             {STATE_BY_CODE[activeBreakdown.state].name}
           </div>
           <dl className="mt-1.5 space-y-0.5">

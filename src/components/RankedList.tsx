@@ -34,8 +34,10 @@ export function RankedList({ breakdowns, selected, onSelect }: Props) {
   }, [breakdowns, sortBy, asc]);
 
   return (
-    <div className="overflow-auto rounded-lg border border-slate-200 bg-white">
-      <table className="w-full text-xs">
+    <div>
+      <p className="pb-1 text-[10px] text-slate-400 sm:hidden">scroll horizontally to see all columns →</p>
+      <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
+      <table className="w-full min-w-[640px] text-xs">
         <thead className="sticky top-0 bg-slate-100 text-slate-700">
           <tr>
             <th className="px-2 py-2 text-left">#</th>
@@ -78,6 +80,7 @@ export function RankedList({ breakdowns, selected, onSelect }: Props) {
           })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

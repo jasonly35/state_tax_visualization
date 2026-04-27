@@ -16,7 +16,7 @@ export function AssumptionsDrawer({ breakdown: b, onClose }: Props) {
         <button onClick={onClose} className="text-xs text-slate-500 hover:text-slate-700">close ✕</button>
       </div>
 
-      <div className="mt-3 grid grid-cols-2 gap-x-6 gap-y-1 text-xs">
+      <div className="mt-3 grid grid-cols-1 gap-x-6 gap-y-1 text-xs sm:grid-cols-2">
         <Row label="Total state + local tax" value={fmtUSD(b.total)} bold />
         <Row label="Effective on gross" value={fmtPctShort(b.effectiveRate)} />
         <Row label="State income tax (incl. county)" value={fmtUSD(b.income)} />

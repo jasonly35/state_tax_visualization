@@ -38,20 +38,20 @@ export default function App() {
   return (
     <div className="min-h-full bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-7xl items-baseline justify-between px-6 py-3">
-          <h1 className="text-base font-semibold">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-3 sm:flex-row sm:items-baseline sm:justify-between sm:px-6">
+          <h1 className="text-sm font-semibold sm:text-base">
             State Taxes for Individuals
           </h1>
-          <div className="flex gap-4 text-xs">
+          <nav className="flex flex-wrap gap-x-4 gap-y-1 text-xs">
             <button onClick={() => setPage('audit')} className="text-sky-700 hover:underline">per-state data</button>
             <button onClick={() => setPage('methodology')} className="text-sky-700 hover:underline">methodology</button>
             <a href="https://github.com/jasonly35/state_tax_visualization" target="_blank" rel="noopener noreferrer" className="text-sky-700 hover:underline">source</a>
-          </div>
+          </nav>
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-6 py-6 grid gap-6 lg:grid-cols-[1fr_320px]">
-        <section className="space-y-4">
+      <main className="mx-auto grid max-w-7xl gap-4 px-4 py-4 sm:gap-6 sm:px-6 sm:py-6 lg:grid-cols-[1fr_320px]">
+        <section className="min-w-0 space-y-4">
           <Choropleth
             breakdowns={breakdowns}
             selected={selected}
@@ -65,12 +65,12 @@ export default function App() {
           <RankedList breakdowns={breakdowns} selected={selected} onSelect={setSelected} />
         </section>
 
-        <aside>
+        <aside className="min-w-0 lg:order-none">
           <ProfilePanel profile={profile} onChange={setProfile} onReset={reset} />
         </aside>
       </main>
 
-      <footer className="mx-auto max-w-7xl px-6 py-6 text-[11px] text-slate-400">
+      <footer className="mx-auto max-w-7xl px-4 py-6 text-[11px] text-slate-400 sm:px-6">
         Seeded with 2024–2025 public data. Verify against state DOR worksheets before publishing.
         Federal tax shown for context but excluded from the comparison since it doesn't vary by state.
       </footer>

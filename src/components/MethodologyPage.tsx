@@ -6,7 +6,7 @@ export function MethodologyPage({ onBack }: Props) {
   return (
     <div className="min-h-full bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto max-w-3xl px-6 py-3">
+        <div className="mx-auto max-w-3xl px-4 py-3 sm:px-6">
           <button
             onClick={onBack}
             className="text-xs text-sky-700 hover:underline"
@@ -16,7 +16,7 @@ export function MethodologyPage({ onBack }: Props) {
         </div>
       </header>
 
-      <article className="mx-auto max-w-3xl px-6 py-10 text-slate-700">
+      <article className="mx-auto max-w-3xl px-4 py-6 text-slate-700 sm:px-6 sm:py-10">
         <h1 className="text-3xl font-bold tracking-tight text-slate-900">
           Methodology
         </h1>
