@@ -147,3 +147,28 @@ export function clampMix(mix: IncomeMix): IncomeMix {
   if (total === 0) return { w2: 1, intDiv: 0, ltcg: 0 };
   return { w2: mix.w2 / total, intDiv: mix.intDiv / total, ltcg: mix.ltcg / total };
 }
+
+/** Update one component of the mix to a new value, redistributing the others
+ *  proportionally so the three still sum to 1. Avoids the trap where dragging
+ *  W-2 to 100% gets renormalized back down by clampMix. */
+export function updateMix(
+  current: IncomeMix,
+  key: keyof IncomeMix,
+  newValue: number,
+): IncomeMix {
+  const v = Math.max(0, Math.min(1, newValue));
+  const remainder = 1 - v;
+  const others: Array<keyof IncomeMix> = (['w2', 'intDiv', 'ltcg'] as const).filter(
+    (k) => k !== key,
+  );
+  const othersSum = others.reduce((s, k) => s + current[k], 0);
+
+  const result: IncomeMix = { ...current, [key]: v };
+  if (othersSum === 0) {
+    // Split the remainder equally if the other two were both zero.
+    for (const k of others) result[k] = remainder / others.length;
+  } else {
+    for (const k of others) result[k] = (current[k] / othersSum) * remainder;
+  }
+  return result;
+}

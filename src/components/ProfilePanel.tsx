@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Profile, IncomeMix } from '../lib/profile';
-import { clampMix } from '../lib/profile';
+import { updateMix } from '../lib/profile';
 
 // Format a number as compact shorthand: 240000 → "240k", 1500000 → "1.5m".
 function formatK(n: number): string {
@@ -82,9 +82,9 @@ const PCT_OPTIONS = [50, 70, 80, 90, 95] as const;
 export function ProfilePanel({ profile, onChange, onReset }: Props) {
   const mix = profile.incomeMix;
 
-  const setMix = (next: Partial<IncomeMix>) => {
-    const merged = { ...mix, ...next };
-    onChange({ ...profile, incomeMix: clampMix(merged) });
+  // Move one slider; redistribute the other two proportionally to keep total = 1.
+  const setMixField = (key: keyof IncomeMix, value: number) => {
+    onChange({ ...profile, incomeMix: updateMix(mix, key, value) });
   };
 
   return (
@@ -122,9 +122,9 @@ export function ProfilePanel({ profile, onChange, onReset }: Props) {
       </Section>
 
       <Section title="Income mix (sums to 100%)">
-        <MixSlider label="W-2 wages" value={mix.w2} onChange={(v) => setMix({ w2: v })} />
-        <MixSlider label="Interest + dividends" value={mix.intDiv} onChange={(v) => setMix({ intDiv: v })} />
-        <MixSlider label="Long-term capital gains" value={mix.ltcg} onChange={(v) => setMix({ ltcg: v })} />
+        <MixSlider label="W-2 wages" value={mix.w2} onChange={(v) => setMixField('w2', v)} />
+        <MixSlider label="Interest + dividends" value={mix.intDiv} onChange={(v) => setMixField('intDiv', v)} />
+        <MixSlider label="Long-term capital gains" value={mix.ltcg} onChange={(v) => setMixField('ltcg', v)} />
         <p className="text-xs text-slate-500">
           {(mix.w2 * 100).toFixed(0)}% / {(mix.intDiv * 100).toFixed(0)}% / {(mix.ltcg * 100).toFixed(0)}%
         </p>

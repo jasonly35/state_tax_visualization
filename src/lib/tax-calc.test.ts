@@ -15,7 +15,7 @@ import {
   computeAllBreakdowns,
   resolveHomeValue,
 } from './tax-calc';
-import { DEFAULT_PROFILE, type Profile, serializeProfile, deserializeProfile } from './profile';
+import { DEFAULT_PROFILE, type Profile, serializeProfile, deserializeProfile, updateMix } from './profile';
 import { STATE_BY_CODE, STATE_DATA, makeOverlayResolver } from './load-data';
 
 const APPROX = 1.0; // dollars
@@ -395,6 +395,44 @@ describe('profile URL serialization (v2)', () => {
     expect(deserializeProfile('garbage')).toBeNull();
     expect(deserializeProfile('v2|too|few')).toBeNull();
     expect(deserializeProfile('v1|valid|but|old|schema|that|is|wrong')).toBeNull();
+  });
+});
+
+describe('updateMix — slider redistribution', () => {
+  const SUM_TOL = 1e-9;
+  const sums1 = (m: { w2: number; intDiv: number; ltcg: number }) =>
+    expect(Math.abs(m.w2 + m.intDiv + m.ltcg - 1)).toBeLessThan(SUM_TOL);
+
+  it('moving W-2 to 100% zeroes out the others', () => {
+    const m = updateMix({ w2: 0.8, intDiv: 0.1, ltcg: 0.1 }, 'w2', 1);
+    expect(m.w2).toBe(1);
+    expect(m.intDiv).toBe(0);
+    expect(m.ltcg).toBe(0);
+    sums1(m);
+  });
+
+  it('moving W-2 to 50% scales the others proportionally', () => {
+    const m = updateMix({ w2: 0.8, intDiv: 0.1, ltcg: 0.1 }, 'w2', 0.5);
+    expect(m.w2).toBe(0.5);
+    expect(m.intDiv).toBeCloseTo(0.25);
+    expect(m.ltcg).toBeCloseTo(0.25);
+    sums1(m);
+  });
+
+  it('preserves the relative ratio of the other two when one is zero', () => {
+    // Starting at all-W2, moving W-2 to 0.5 should split the remaining 0.5 evenly.
+    const m = updateMix({ w2: 1, intDiv: 0, ltcg: 0 }, 'w2', 0.5);
+    expect(m.w2).toBe(0.5);
+    expect(m.intDiv).toBeCloseTo(0.25);
+    expect(m.ltcg).toBeCloseTo(0.25);
+    sums1(m);
+  });
+
+  it('clamps out-of-range input', () => {
+    const above = updateMix({ w2: 0.8, intDiv: 0.1, ltcg: 0.1 }, 'w2', 1.5);
+    expect(above.w2).toBe(1);
+    const below = updateMix({ w2: 0.8, intDiv: 0.1, ltcg: 0.1 }, 'w2', -0.2);
+    expect(below.w2).toBe(0);
   });
 });
 
