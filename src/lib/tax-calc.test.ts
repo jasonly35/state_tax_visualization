@@ -223,8 +223,8 @@ describe('payroll / worker contributions', () => {
 describe('vehicle property tax', () => {
   const p = DEFAULT_PROFILE;
 
-  it('VA at default $80K vehicle value', () => {
-    near(computeVehicleTax(p, STATE_BY_CODE.VA), 0.0413 * 80_000, 1);
+  it('VA: vehicle tax = rate × vehicleValue (rate ≈ 4.13%)', () => {
+    near(computeVehicleTax(p, STATE_BY_CODE.VA), 0.0413 * p.vehicleValue, 1);
   });
 
   it('TX has zero vehicle property tax', () => {
@@ -336,7 +336,9 @@ describe('computeBreakdown', () => {
     const resolver = makeOverlayResolver('state_default');
     const r = resolver(STATE_BY_CODE.VA);
     const b = computeBreakdown(DEFAULT_PROFILE, STATE_BY_CODE.VA, r.overlay, r.city);
-    near(b.vehicle, 3_304, 5);
+    // Default vehicleValue × VA rate (4.13%) — derived so test stays valid if
+    // the default shifts.
+    near(b.vehicle, 0.0413 * DEFAULT_PROFILE.vehicleValue, 5);
     expect(b.total).toBeGreaterThan(b.income + b.property);
   });
 });
@@ -358,7 +360,7 @@ describe('profile URL serialization (v2)', () => {
     expect(back!.dependents).toBe(1);
     expect(back!.k401Contribution).toBe(23_500);
     expect(back!.hsaContribution).toBe(8_550);
-    expect(back!.vehicleValue).toBe(80_000);
+    expect(back!.vehicleValue).toBe(DEFAULT_PROFILE.vehicleValue);
     expect(back!.city).toBe('state_default');
     expect(back!.homeValue).toEqual({ kind: 'percentile', pct: 80 });
     expect(back!.consumption).toEqual({ kind: 'percentile', pct: 80 });

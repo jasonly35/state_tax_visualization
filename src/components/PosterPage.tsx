@@ -99,7 +99,7 @@ function Header({ profile }: { profile: Profile }) {
       <p style={{ fontSize: 14, color: '#94a3b8', marginTop: 18, lineHeight: 1.5 }}>
         Married filing jointly, one dependent, moving to a new state in 2025. Scenario
         assumes max 401(k) ($23,500) and family HSA ($8,550), 80th-percentile metro home,
-        top-quintile consumption, $80K vehicle, 24K annual miles. Income mix:{' '}
+        top-quintile consumption, $50K vehicle, 24K annual miles. Income mix:{' '}
         {(incomeMix.w2 * 100).toFixed(0)}% W-2 / {(incomeMix.intDiv * 100).toFixed(0)}% interest+div /
         {' '}{(incomeMix.ltcg * 100).toFixed(0)}% long-term cap gains. Each state uses its
         representative city for local taxes (NYC for NY, Philadelphia for PA, etc.).

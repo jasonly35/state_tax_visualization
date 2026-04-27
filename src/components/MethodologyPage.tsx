@@ -71,7 +71,7 @@ export function MethodologyPage({ onBack }: Props) {
             <LI>
               <B>Vehicle property tax</B> — VA, CT, MO, MS, ME, WV, RI, KY, NC, SC, AL,
               AR, OK, AK levy ad-valorem motor vehicle taxes; default vehicle value
-              $80,000 (two cars).
+              $50,000 (two cars).
             </LI>
             <LI>
               <B>Sales tax</B> — combined state + average local rate × top-quintile

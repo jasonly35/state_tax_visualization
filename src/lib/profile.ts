@@ -58,7 +58,7 @@ export const DEFAULT_PROFILE: Profile = {
   hsaContribution: 8_550,
   homeValue: { kind: 'percentile', pct: 80 },
   consumption: { kind: 'percentile', pct: 80 },
-  vehicleValue: 80_000,
+  vehicleValue: 50_000,
   annualMiles: 24_000,
   city: 'state_default',
 };

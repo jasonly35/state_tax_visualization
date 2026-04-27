@@ -182,7 +182,7 @@ export function ProfilePanel({ profile, onChange, onReset }: Props) {
       </Section>
 
       <Section title="Vehicles">
-        <Field label="Combined household vehicle value (e.g. 80k)">
+        <Field label="Combined household vehicle value (e.g. 50k)">
           <KInput
             value={profile.vehicleValue}
             min={0}

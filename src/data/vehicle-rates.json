@@ -1,7 +1,7 @@
 {
   "_meta": {
     "asOf": "2024",
-    "source": "State personal property / motor vehicle tax statutes. Rates are state-weighted averages where county-level variation exists. Default vehicle value $80,000 (two cars).",
+    "source": "State personal property / motor vehicle tax statutes. Rates are state-weighted averages where county-level variation exists. Default vehicle value $50,000 (two cars).",
     "schema": "rate is effective annual ad-valorem tax on motor vehicle market value, decimal"
   },
   "VA": {"rate": 0.0413, "notes": "Personal property tax rate weighted across counties; Arlington 5.0%, Fairfax 4.57%, etc."},
