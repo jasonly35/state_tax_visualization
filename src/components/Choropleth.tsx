@@ -75,6 +75,21 @@ export function Choropleth({ breakdowns, selected, onSelect }: Props) {
   const activeCode = hovered ?? selected;
   const activeBreakdown = activeCode ? byCode.get(activeCode) ?? null : null;
 
+  // Decide which corner the tooltip pins to: if the active state's centroid is
+  // in the right half of the map, render the tooltip on the LEFT so it doesn't
+  // cover the state under the cursor. Centroid-based (not mouse-based) so the
+  // tooltip doesn't jitter as the cursor moves within the state.
+  const tooltipSide: 'left' | 'right' = useMemo(() => {
+    if (!activeCode) return 'right';
+    const f = (featureCollection.features as any[]).find(
+      (feat) => FIPS_TO_CODE[String(feat.id).padStart(2, '0')] === activeCode,
+    );
+    if (!f) return 'right';
+    const c = path.centroid(f);
+    if (!Number.isFinite(c[0])) return 'right';
+    return c[0] > WIDTH / 2 ? 'left' : 'right';
+  }, [activeCode, featureCollection, path]);
+
   return (
     <div ref={wrapRef} className="relative overflow-hidden rounded-lg border border-slate-200 bg-slate-50 shadow-sm sm:rounded-xl">
       <svg
@@ -181,9 +196,14 @@ export function Choropleth({ breakdowns, selected, onSelect }: Props) {
         </g>
       </svg>
 
-      {/* Floating tooltip — caps width to fit narrow viewports without overflow */}
+      {/* Floating tooltip — anchors to the side of the map opposite the active
+          state's centroid, so it never covers the state being inspected. */}
       {activeBreakdown && (
-        <div className="pointer-events-none absolute right-2 top-2 w-[180px] max-w-[60%] rounded-lg border border-slate-200 bg-white/95 p-2 text-[11px] shadow-lg backdrop-blur-sm sm:right-3 sm:top-3 sm:w-auto sm:max-w-xs sm:p-3 sm:text-xs">
+        <div
+          className={`pointer-events-none absolute top-2 w-[180px] max-w-[60%] rounded-lg border border-slate-200 bg-white/95 p-2 text-[11px] shadow-lg backdrop-blur-sm sm:top-3 sm:w-auto sm:max-w-xs sm:p-3 sm:text-xs ${
+            tooltipSide === 'left' ? 'left-2 sm:left-3' : 'right-2 sm:right-3'
+          }`}
+        >
           <div className="text-xs font-semibold text-slate-900 sm:text-sm">
             {STATE_BY_CODE[activeBreakdown.state].name}
           </div>
