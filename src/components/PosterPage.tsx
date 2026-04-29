@@ -26,6 +26,11 @@ const FIPS_TO_CODE: Record<string, StateCode> = {
 const POSTER_W = 1600;
 const POSTER_H = 2400;
 
+// Punchcard variant uses a mobile-portrait aspect ratio so it stays readable
+// in the Reddit feed without horizontal scrolling.
+const PUNCH_W = 1080;
+const PUNCH_H = 2000;
+
 // Component palette — Tailwind-friendly hexes, sequential and CB-safe.
 const COMP_COLORS = {
   income:   '#1e3a8a', // blue-900
@@ -47,13 +52,15 @@ function buildCompOrder(housing: 'owner' | 'renter' | 'nomad'): Array<{ key: Com
     housing === 'renter' ? 'Rent' :
     housing === 'nomad'  ? 'Property / rent' /* legend hidden anyway */ :
     'Property';
+  // Housing leftmost: it's the largest segment for almost every state and
+  // anchors the left edge of every bar, which makes ranks easier to read.
   return [
+    { key: 'property', label: housingLabel },
     { key: 'income',   label: 'State income' },
     { key: 'local',    label: 'Local income' },
-    { key: 'payroll',  label: 'Payroll (SDI/PFML)' },
-    { key: 'property', label: housingLabel },
-    { key: 'vehicle',  label: 'Vehicle property' },
     { key: 'sales',    label: 'Sales' },
+    { key: 'payroll',  label: 'Payroll (SDI/PFML)' },
+    { key: 'vehicle',  label: 'Vehicle property' },
     { key: 'gas',      label: 'Gas' },
   ];
 }
@@ -62,7 +69,27 @@ interface Props {
   profile: Profile;
 }
 
-export function PosterPage({ profile }: Props) {
+export function PosterPage({ profile: profileIn }: Props) {
+  // Optional `?nohousing=1` switch — forces nomad housing so the poster
+  // renders without property tax / rent. Used to A/B the visualization.
+  const profile = useMemo<Profile>(() => {
+    if (typeof window === 'undefined') return profileIn;
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('nohousing')) {
+      return { ...profileIn, housing: 'nomad' };
+    }
+    return profileIn;
+  }, [profileIn]);
+
+  // `?layout=punchcard` swaps the choropleth+bars layout for a dot-matrix grid
+  // where each cell's square area is proportional to dollars paid in that
+  // tax category. Prototype.
+  const layout: 'default' | 'punchcard' = useMemo(() => {
+    if (typeof window === 'undefined') return 'default';
+    const params = new URLSearchParams(window.location.search);
+    return params.get('layout') === 'punchcard' ? 'punchcard' : 'default';
+  }, []);
+
   const breakdowns = useMemo(() => {
     const resolver = makeOverlayResolver(profile.city);
     return computeAllBreakdowns(profile, STATE_DATA, resolver);
@@ -77,9 +104,29 @@ export function PosterPage({ profile }: Props) {
     [breakdowns],
   );
 
+  if (layout === 'punchcard') {
+    return (
+      <div
+        style={{
+          position: 'relative',
+          width: PUNCH_W,
+          height: PUNCH_H,
+          background: '#ffffff',
+          fontFamily: 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+          color: '#0f172a',
+        }}
+      >
+        <PunchcardHeader profile={profile} />
+        <PunchcardPanel sortedDesc={sortedDesc} housing={profile.housing} />
+        <PunchcardFooter />
+      </div>
+    );
+  }
+
   return (
     <div
       style={{
+        position: 'relative',
         width: POSTER_W,
         height: POSTER_H,
         background: '#ffffff',
@@ -340,11 +387,13 @@ function Callout({
 
 // ---------------------------------------------------------------------------
 function BarsPanel({ sortedDesc, housing }: { sortedDesc: Breakdown[]; housing: 'owner' | 'renter' | 'nomad' }) {
-  const ROW_H = 22;
+  const ROW_H = 24;
   const PAD_X = 60;
   const LEFT_LABEL_W = 140;
-  const RIGHT_TOTAL_W = 110;
-  const BAR_AREA_W = POSTER_W - 2 * PAD_X - LEFT_LABEL_W - RIGHT_TOTAL_W - 24;
+  // Trailing room reserved for the dollar total that follows each bar tip.
+  const TRAIL_W = 96;
+  const BAR_AREA_W = POSTER_W - 2 * PAD_X - LEFT_LABEL_W - 12 - TRAIL_W;
+  const VIEWBOX_W = POSTER_W - 2 * PAD_X;
   const maxTotal = sortedDesc[0]?.total ?? 1;
   const compOrder = buildCompOrder(housing);
 
@@ -354,24 +403,31 @@ function BarsPanel({ sortedDesc, housing }: { sortedDesc: Breakdown[]; housing: 
         Where the dollars actually go, state by state
       </h2>
       <p style={{ fontSize: 13, color: '#64748b', margin: '0 0 8px 0' }}>
-        Sorted high to low. Stack shows component breakdown.
+        Sorted high to low. Stack shows component breakdown. Total tax follows each bar.
       </p>
 
       <Legend compOrder={compOrder} />
 
-      <svg viewBox={`0 0 ${POSTER_W - 2 * PAD_X} ${sortedDesc.length * ROW_H + 6}`} width="100%">
+      <svg viewBox={`0 0 ${VIEWBOX_W} ${sortedDesc.length * ROW_H + 6}`} width="100%">
         {sortedDesc.map((b, i) => {
           const y = i * ROW_H;
           let x = LEFT_LABEL_W + 12;
           const widthFor = (v: number) => (v / maxTotal) * BAR_AREA_W;
+          const barW = widthFor(b.total);
+          const isStripe = i % 2 === 1;
           return (
             <g key={b.state} transform={`translate(0, ${y})`}>
+              {/* Zebra stripe — full-row band so the eye can ride a row from
+                  state name to total without losing track. */}
+              {isStripe && (
+                <rect x={0} y={0} width={VIEWBOX_W} height={ROW_H} fill="#f1f5f9" />
+              )}
               {/* State label */}
               <text
                 x={LEFT_LABEL_W}
-                y={ROW_H - 7}
+                y={ROW_H - 8}
                 textAnchor="end"
-                style={{ fontSize: 12, fontWeight: 500, fill: '#0f172a' }}
+                style={{ fontSize: 13, fontWeight: 500, fill: '#0f172a' }}
               >
                 {STATE_BY_CODE[b.state].name}
               </text>
@@ -387,18 +443,19 @@ function BarsPanel({ sortedDesc, housing }: { sortedDesc: Breakdown[]; housing: 
                   <rect
                     key={c.key}
                     x={segX}
-                    y={3}
+                    y={4}
                     width={w}
-                    height={ROW_H - 6}
+                    height={ROW_H - 8}
                     fill={COMP_COLORS[c.key]}
                   />
                 );
               })}
-              {/* Total $ on the right */}
+              {/* Total $ — anchored to the bar tip so the eye reads
+                  state-name → bar → total without traversing the page. */}
               <text
-                x={LEFT_LABEL_W + 12 + BAR_AREA_W + 12}
-                y={ROW_H - 7}
-                style={{ fontSize: 12, fontVariantNumeric: 'tabular-nums', fontWeight: 600, fill: '#0f172a' }}
+                x={LEFT_LABEL_W + 12 + barW + 8}
+                y={ROW_H - 8}
+                style={{ fontSize: 13, fontVariantNumeric: 'tabular-nums', fontWeight: 600, fill: '#0f172a' }}
               >
                 {fmtUSD(b.total)}
               </text>
@@ -427,6 +484,220 @@ function Legend({ compOrder }: { compOrder: Array<{ key: CompKey; label: string 
           {c.label}
         </div>
       ))}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+function PunchcardHeader({ profile }: { profile: Profile }) {
+  const incomeShort = profile.grossIncome >= 1_000_000
+    ? `$${(profile.grossIncome / 1_000_000).toFixed(1).replace(/\.0$/, '')}m`
+    : `$${Math.round(profile.grossIncome / 1000)}k`;
+  return (
+    <div style={{ padding: '32px 30px 16px 30px' }}>
+      <h1 style={{ fontSize: 38, fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.02em', margin: 0 }}>
+        Total state tax for a couple making {incomeShort}
+      </h1>
+      <p style={{ fontSize: 16, color: '#475569', margin: '10px 0 0 0', lineHeight: 1.4 }}>
+        All 50 US states + DC · 2025 · married filing jointly · square area = dollars paid in each tax category.
+      </p>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+function PunchcardFooter() {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        padding: '12px 30px',
+        borderTop: '1px solid #e2e8f0',
+        background: '#f8fafc',
+        fontSize: 13,
+        color: '#475569',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'baseline',
+        gap: 16,
+      }}
+    >
+      <div>2025 state DOR worksheets · Tax Foundation · Zillow ZHVI · BLS CES.</div>
+      <div style={{ fontWeight: 600, color: '#0f172a' }}>jasonly35.github.io/state_tax_visualization</div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+function PunchcardPanel({
+  sortedDesc,
+  housing,
+}: {
+  sortedDesc: Breakdown[];
+  housing: 'owner' | 'renter' | 'nomad';
+}) {
+  const PAD_X = 30;
+  const VIEWBOX_W = PUNCH_W - 2 * PAD_X;
+  const ROW_H = 28;
+  const HEADER_H = 44;
+  const LEFT_LABEL_W = 110;
+  const TOTAL_COL_W = 96;
+  const LABEL_GAP = 8;
+
+  const housingLabel =
+    housing === 'renter' ? 'Rent' :
+    housing === 'nomad'  ? 'Housing' :
+    'Property';
+
+  type Col = { key: CompKey; label: string };
+  // 5 columns. Gas + Payroll are <$1k for almost every state and don't
+  // contribute to the visual story — dropped to give the remaining columns
+  // more breathing room on a mobile-portrait poster.
+  const dataCols: Col[] = [
+    { key: 'property', label: housingLabel },
+    { key: 'income',   label: 'State inc.' },
+    { key: 'local',    label: 'Local inc.' },
+    { key: 'sales',    label: 'Sales' },
+    { key: 'vehicle',  label: 'Vehicle' },
+  ];
+
+  const dataAreaW = VIEWBOX_W - LEFT_LABEL_W - LABEL_GAP - TOTAL_COL_W - 12;
+  const colW = dataAreaW / dataCols.length;
+
+  const valueAt = (b: Breakdown, key: CompKey) =>
+    key === 'property' ? b.property + b.rent : b[key];
+
+  const maxVal = Math.max(
+    1,
+    ...sortedDesc.flatMap((b) => dataCols.map((c) => valueAt(b, c.key))),
+  );
+  const maxSide = Math.min(ROW_H - 4, colW - 6);
+  const sideFor = (v: number) => {
+    if (v <= 0) return 0;
+    const s = maxSide * Math.sqrt(v / maxVal);
+    // Larger floor than the print version — small values still need to read at
+    // mobile-feed scale.
+    return Math.max(s, 3.5);
+  };
+
+  const legendValues = [1000, 5000, 10000, 15000].filter((v) => v <= maxVal);
+
+  const totalH = HEADER_H + sortedDesc.length * ROW_H + 6;
+
+  return (
+    <div style={{ padding: '0 30px 16px 30px' }}>
+      {/* Reference legend */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '0 0 12px 0', fontSize: 13, color: '#475569' }}>
+        <span style={{ fontWeight: 600, color: '#0f172a' }}>Scale:</span>
+        {legendValues.map((v) => {
+          const s = sideFor(v);
+          return (
+            <div key={v} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              <span style={{
+                display: 'inline-block', width: maxSide, height: maxSide,
+                position: 'relative',
+              }}>
+                <span style={{
+                  position: 'absolute',
+                  left: (maxSide - s) / 2,
+                  top: (maxSide - s) / 2,
+                  width: s,
+                  height: s,
+                  background: '#475569',
+                  borderRadius: 1.5,
+                }} />
+              </span>
+              <span style={{ fontVariantNumeric: 'tabular-nums' }}>${v.toLocaleString()}</span>
+            </div>
+          );
+        })}
+      </div>
+
+      <svg viewBox={`0 0 ${VIEWBOX_W} ${totalH}`} width="100%">
+        {/* Column headers */}
+        {dataCols.map((c, ci) => {
+          const cx = LEFT_LABEL_W + LABEL_GAP + (ci + 0.5) * colW;
+          return (
+            <g key={c.key}>
+              <rect
+                x={cx - colW / 2}
+                y={0}
+                width={colW}
+                height={HEADER_H - 6}
+                fill={COMP_COLORS[c.key]}
+                opacity={0.08}
+              />
+              <text
+                x={cx}
+                y={HEADER_H - 14}
+                textAnchor="middle"
+                style={{ fontSize: 13, fontWeight: 700, fill: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.04em' }}
+              >
+                {c.label}
+              </text>
+            </g>
+          );
+        })}
+        <text
+          x={LEFT_LABEL_W + LABEL_GAP + dataAreaW + 12 + TOTAL_COL_W - 6}
+          y={HEADER_H - 14}
+          textAnchor="end"
+          style={{ fontSize: 13, fontWeight: 700, fill: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.04em' }}
+        >
+          Total
+        </text>
+        <line x1={0} x2={VIEWBOX_W} y1={HEADER_H - 4} y2={HEADER_H - 4} stroke="#cbd5e1" strokeWidth={1} />
+
+        {/* Rows */}
+        {sortedDesc.map((b, i) => {
+          const y = HEADER_H + i * ROW_H;
+          const isStripe = i % 2 === 1;
+          return (
+            <g key={b.state} transform={`translate(0, ${y})`}>
+              {isStripe && (
+                <rect x={0} y={0} width={VIEWBOX_W} height={ROW_H} fill="#f8fafc" />
+              )}
+              <text
+                x={LEFT_LABEL_W}
+                y={ROW_H - 9}
+                textAnchor="end"
+                style={{ fontSize: 14, fontWeight: 500, fill: '#0f172a' }}
+              >
+                {b.state === 'DC' ? 'Washington D.C.' : STATE_BY_CODE[b.state].name}
+              </text>
+              {dataCols.map((c, ci) => {
+                const v = valueAt(b, c.key);
+                const side = sideFor(v);
+                if (side === 0) return null;
+                const cx = LEFT_LABEL_W + LABEL_GAP + (ci + 0.5) * colW;
+                const cy = ROW_H / 2;
+                return (
+                  <rect
+                    key={c.key}
+                    x={cx - side / 2}
+                    y={cy - side / 2}
+                    width={side}
+                    height={side}
+                    fill={COMP_COLORS[c.key]}
+                    rx={1.5}
+                  />
+                );
+              })}
+              <text
+                x={LEFT_LABEL_W + LABEL_GAP + dataAreaW + 12 + TOTAL_COL_W - 6}
+                y={ROW_H - 9}
+                textAnchor="end"
+                style={{ fontSize: 14, fontVariantNumeric: 'tabular-nums', fontWeight: 600, fill: '#0f172a' }}
+              >
+                {fmtUSD(b.total)}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
     </div>
   );
 }
