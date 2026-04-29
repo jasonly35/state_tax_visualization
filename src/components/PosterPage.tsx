@@ -27,9 +27,11 @@ const POSTER_W = 1600;
 const POSTER_H = 2400;
 
 // Punchcard variant uses a mobile-portrait aspect ratio so it stays readable
-// in the Reddit feed without horizontal scrolling.
+// in the Reddit feed without horizontal scrolling. Tall rows + large fonts so
+// that at typical mobile feed scale (~390px wide), state names and totals
+// don't shrink below ~10 device px.
 const PUNCH_W = 1080;
-const PUNCH_H = 2000;
+const PUNCH_H = 3500;
 
 // Component palette — Tailwind-friendly hexes, sequential and CB-safe.
 const COMP_COLORS = {
@@ -494,11 +496,11 @@ function PunchcardHeader({ profile }: { profile: Profile }) {
     ? `$${(profile.grossIncome / 1_000_000).toFixed(1).replace(/\.0$/, '')}m`
     : `$${Math.round(profile.grossIncome / 1000)}k`;
   return (
-    <div style={{ padding: '32px 30px 16px 30px' }}>
-      <h1 style={{ fontSize: 38, fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.02em', margin: 0 }}>
+    <div style={{ padding: '40px 32px 20px 32px' }}>
+      <h1 style={{ fontSize: 56, fontWeight: 700, lineHeight: 1.08, letterSpacing: '-0.02em', margin: 0 }}>
         Total state tax for a couple making {incomeShort}
       </h1>
-      <p style={{ fontSize: 16, color: '#475569', margin: '10px 0 0 0', lineHeight: 1.4 }}>
+      <p style={{ fontSize: 22, color: '#475569', margin: '14px 0 0 0', lineHeight: 1.4 }}>
         All 50 US states + DC · 2025 · married filing jointly · square area = dollars paid in each tax category.
       </p>
     </div>
@@ -514,18 +516,18 @@ function PunchcardFooter() {
         bottom: 0,
         left: 0,
         right: 0,
-        padding: '12px 30px',
+        padding: '20px 32px',
         borderTop: '1px solid #e2e8f0',
         background: '#f8fafc',
-        fontSize: 13,
+        fontSize: 18,
         color: '#475569',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'baseline',
-        gap: 16,
+        gap: 20,
       }}
     >
-      <div>2025 state DOR worksheets · Tax Foundation · Zillow ZHVI · BLS CES.</div>
+      <div>2025 state DOR · Tax Foundation · Zillow ZHVI · BLS CES.</div>
       <div style={{ fontWeight: 600, color: '#0f172a' }}>jasonly35.github.io/state_tax_visualization</div>
     </div>
   );
@@ -539,13 +541,13 @@ function PunchcardPanel({
   sortedDesc: Breakdown[];
   housing: 'owner' | 'renter' | 'nomad';
 }) {
-  const PAD_X = 30;
+  const PAD_X = 32;
   const VIEWBOX_W = PUNCH_W - 2 * PAD_X;
-  const ROW_H = 28;
-  const HEADER_H = 44;
-  const LEFT_LABEL_W = 110;
-  const TOTAL_COL_W = 96;
-  const LABEL_GAP = 8;
+  const ROW_H = 60;
+  const HEADER_H = 64;
+  const LEFT_LABEL_W = 170;
+  const TOTAL_COL_W = 140;
+  const LABEL_GAP = 12;
 
   const housingLabel =
     housing === 'renter' ? 'Rent' :
@@ -574,13 +576,13 @@ function PunchcardPanel({
     1,
     ...sortedDesc.flatMap((b) => dataCols.map((c) => valueAt(b, c.key))),
   );
-  const maxSide = Math.min(ROW_H - 4, colW - 6);
+  const maxSide = Math.min(ROW_H - 8, colW - 8);
   const sideFor = (v: number) => {
     if (v <= 0) return 0;
     const s = maxSide * Math.sqrt(v / maxVal);
     // Larger floor than the print version — small values still need to read at
     // mobile-feed scale.
-    return Math.max(s, 3.5);
+    return Math.max(s, 6);
   };
 
   const legendValues = [1000, 5000, 10000, 15000].filter((v) => v <= maxVal);
@@ -588,9 +590,9 @@ function PunchcardPanel({
   const totalH = HEADER_H + sortedDesc.length * ROW_H + 6;
 
   return (
-    <div style={{ padding: '0 30px 16px 30px' }}>
+    <div style={{ padding: '0 32px 16px 32px' }}>
       {/* Reference legend */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14, margin: '0 0 12px 0', fontSize: 13, color: '#475569' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 22, margin: '0 0 18px 0', fontSize: 18, color: '#475569' }}>
         <span style={{ fontWeight: 600, color: '#0f172a' }}>Scale:</span>
         {legendValues.map((v) => {
           const s = sideFor(v);
@@ -632,9 +634,9 @@ function PunchcardPanel({
               />
               <text
                 x={cx}
-                y={HEADER_H - 14}
+                y={HEADER_H - 20}
                 textAnchor="middle"
-                style={{ fontSize: 13, fontWeight: 700, fill: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.04em' }}
+                style={{ fontSize: 20, fontWeight: 700, fill: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.04em' }}
               >
                 {c.label}
               </text>
@@ -643,9 +645,9 @@ function PunchcardPanel({
         })}
         <text
           x={LEFT_LABEL_W + LABEL_GAP + dataAreaW + 12 + TOTAL_COL_W - 6}
-          y={HEADER_H - 14}
+          y={HEADER_H - 20}
           textAnchor="end"
-          style={{ fontSize: 13, fontWeight: 700, fill: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.04em' }}
+          style={{ fontSize: 20, fontWeight: 700, fill: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.04em' }}
         >
           Total
         </text>
@@ -662,11 +664,11 @@ function PunchcardPanel({
               )}
               <text
                 x={LEFT_LABEL_W}
-                y={ROW_H - 9}
+                y={ROW_H - 20}
                 textAnchor="end"
-                style={{ fontSize: 14, fontWeight: 500, fill: '#0f172a' }}
+                style={{ fontSize: 24, fontWeight: 500, fill: '#0f172a' }}
               >
-                {b.state === 'DC' ? 'Washington D.C.' : STATE_BY_CODE[b.state].name}
+                {b.state === 'DC' ? 'Washington DC' : STATE_BY_CODE[b.state].name}
               </text>
               {dataCols.map((c, ci) => {
                 const v = valueAt(b, c.key);
@@ -688,9 +690,9 @@ function PunchcardPanel({
               })}
               <text
                 x={LEFT_LABEL_W + LABEL_GAP + dataAreaW + 12 + TOTAL_COL_W - 6}
-                y={ROW_H - 9}
+                y={ROW_H - 20}
                 textAnchor="end"
-                style={{ fontSize: 14, fontVariantNumeric: 'tabular-nums', fontWeight: 600, fill: '#0f172a' }}
+                style={{ fontSize: 24, fontVariantNumeric: 'tabular-nums', fontWeight: 600, fill: '#0f172a' }}
               >
                 {fmtUSD(b.total)}
               </text>
